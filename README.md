@@ -25,13 +25,13 @@ npm run dev
 
 ## 文件结构
 ```sh
-pages/            # 
+pages/            # 页面
     _app.tsx
     about.tsx
-
 src/
     app/
     components/    #组件
+tests/             #测试
 ```
 
 

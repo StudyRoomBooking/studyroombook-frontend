@@ -1,46 +1,115 @@
-import React, { useState } from 'react';
+import React from "react";
+import { Form, Input, Button, message } from "antd";
 
-// 定义登录页面组件
-const LoginPage: React.FC = () => {
-  // 定义状态来存储用户名和密码
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+export default function Login() {
+  const [messageApi, contextHolder] = message.useMessage();
 
-  // 处理表单提交事件
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // 在此处添加处理登录逻辑，例如发送登录请求到服务器
-    console.log('Username:', username);
-    console.log('Password:', password);
-  }
+  const onFinish = (values: any) => {
+    console.log("Success:", values);
+    messageApi.success("登录成功！", 2.5);
+
+    // TODO Handle login logic here
+    setTimeout(() => {
+      window.location.href = "/home";
+    }, 2500);
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
 
   return (
-    <div>
-      <h1>Login</h1>
-      {/* 登录表单 */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+    <main
+      className="flex items-center justify-center"
+      style={{ height: "100vh", width: "100vw", backgroundColor: "#CBFCDF" }}
+    >
+      {contextHolder}{" "}
+      {/* Render message context holder at the top of your component tree */}
+      <div
+        style={{
+          width: "90vw",
+          height: "90vh",
+          display: "flex",
+          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "12px",
+          overflow: "hidden",
+          backgroundColor: "white",
+        }}
+      >
+        <div style={{ width: "50%" }}>
+          <h2
+            className="text-black text-5xl"
+            style={{ marginLeft: "80px", paddingTop: "40%" }}
+          >
+            Login
+          </h2>
+          <p className="text-black text-1xl" style={{ marginLeft: "80px" }}>
+            欢迎来StudyRoomBooking
+          </p>
+          <Form
+            name="basic"
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+            layout="vertical"
+            style={{ marginInline: "80px", paddingTop: "20px" }}
+          >
+            <Form.Item
+              label="用户"
+              name="username"
+              rules={[{ required: true, message: "请输入你的用户名!" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="密码"
+              name="password"
+              rules={[{ required: true, message: "请输入你的密码！" }]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                onClick={() => {
+                  console.log("Login button clicked");
+                }}
+                style={{
+                  width: "100%",
+                  backgroundColor: "#12B987",
+                  height: "50px",
+                  marginTop: "50px",
+                }}
+              >
+                登录
+              </Button>
+            </Form.Item>
+          </Form>
+
+          {/* Own button */}
+          {/* <Button
+            type="primary"
+            onClick={() => {
+              messageApi.loading("正在加载中...", 2.5);
+            }}
+            style={{
+              width: "100%",
+              backgroundColor: "#12B987",
+              height: "50px",
+              marginTop: "50px",
+              marginLeft: "80px",
+            }}
+          > Button </Button> */}
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+
+        <div style={{ width: "50%", backgroundColor: "#D6FFF2" }}>
+          {/* Image Placeholder */}
         </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+      </div>
+    </main>
   );
 }
-
-export default LoginPage;
