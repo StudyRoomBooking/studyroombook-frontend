@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Study Room Booking Frontend
 
-new_branch
+Hello from branch 2
 
-## Envirornment
+## 配置环境
 使用nvm配置node
 ```
 nvm use
@@ -13,16 +13,29 @@ nvm use
 npm install
 ```
 
-## Getting Started
+## Running
 
-First, run the development server:
+首先，运行开发server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-Open [http://localhost:3000/login](http://localhost:3000/login) with your browser to login.
+打开 [http://localhost:3000](http://localhost:3000) 访问网站
+
+## 文件结构
+```sh
+pages/            # 
+    _app.tsx
+    about.tsx
+
+src/
+    app/
+    components/    #组件
+```
+
+
+## 其他
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
