@@ -11,7 +11,7 @@ export default function Login() {
     // TODO Handle login logic here
     setTimeout(() => {
       window.location.href = "/home";
-    }, 2500);
+    }, 0);
   };
 
   const onFinishFailed = (errorInfo: any) => {
