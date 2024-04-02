@@ -16,7 +16,7 @@ export default function Login() {
       console.log(response);
       if (response.status === 200) {
         messageApi.success("登记成功！", 2.5);
-        // window.location.href = "/home";
+        window.location.href = "/home";
       } else if (response.status === 400) {
         messageApi.error("用户名或密码错误，请重新输入！", 2.5);
       }
