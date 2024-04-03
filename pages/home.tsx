@@ -18,6 +18,7 @@ import {
   Space,
   Image,
   message,
+  Dropdown,
 } from "antd";
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -47,6 +48,30 @@ const items: MenuItem[] = [
   getItem("其他", "file", <FileOutlined />),
 ];
 
+// type DropdownMenuItem = Required<MenuProps>["items"][number];
+const dropdownMenuItems: MenuProps["items"] = [
+  {
+    label: "1st menu item",
+    key: "1",
+    icon: <UserOutlined />,
+  },
+  {
+    label: "2nd menu item",
+    key: "2",
+    icon: <UserOutlined />,
+  },
+];
+
+const handleMenuClick: MenuProps["onClick"] = (e) => {
+  message.info("Click on menu item.");
+  console.log("click", e);
+};
+
+const menuProps = {
+  dropdownMenuItems,
+  onClick: handleMenuClick,
+};
+
 export default function Home() {
   const [messageApi, contextHolder] = message.useMessage();
   const [collapsed, setCollapsed] = useState(false);
@@ -62,7 +87,7 @@ export default function Home() {
       try {
         const response = await axios.get("/users/profile");
         setUsername(response.data.username);
-        console.log(response.data);
+        console.log(response);
       } catch (error) {
         console.error(error);
       }
@@ -148,6 +173,9 @@ export default function Home() {
               <Space>
                 <p className="text-black">{username}</p>
                 <Avatar shape="square" size={32} icon={<UserOutlined />} />
+                {/* <Dropdown.Button menu={menuProps} placement="bottomLeft">
+                  Dropdown
+                </Dropdown.Button> */}
               </Space>
             </div>
           </Header>
