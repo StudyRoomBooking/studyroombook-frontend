@@ -130,8 +130,8 @@ const handleCancelBooking = async (record: any) => {
       // Referesh the page
       window.location.reload();
     }
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error("handleCancelBooking error:", error.code, error.message);
     message.error("取消预约失败", 2.5);
   }
 };
@@ -516,8 +516,12 @@ export default function PersonalSystem() {
         }));
         // console.log(dataWithKeys);
         setRooms(dataWithKeys);
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        console.error(
+          "fetchRoomInformation error: ",
+          error.code,
+          error.message
+        );
       }
     };
 
@@ -542,8 +546,8 @@ export default function PersonalSystem() {
           })
         );
         setBookingHistory(bookingHistoryMap);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        console.log("fetchingBookingHistory error:", error.code, error.message);
       }
     };
 
@@ -602,8 +606,8 @@ export default function PersonalSystem() {
       const roomSeatsDataMapped = binaryToHourlyBookings(roomSeatsData);
       console.log("Room seats data", roomSeatsDataMapped);
       setRoomSeats(roomSeatsDataMapped);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("fetchRoomSeats error:", error.code, error.message);
     }
   };
 

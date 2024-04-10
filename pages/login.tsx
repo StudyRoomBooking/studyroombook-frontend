@@ -13,15 +13,16 @@ export default function Login() {
     };
     try {
       const response = await axios.post("/users/login", data);
-      console.log(response);
+      console.log("Logging in...", response);
       if (response.status === 200) {
         messageApi.success("登记成功！", 2.5);
         window.location.href = "/home";
       } else if (response.status === 400) {
         messageApi.error("用户名或密码错误，请重新输入！", 2.5);
       }
-    } catch {
+    } catch (error: any) {
       messageApi.error("登记有问题，请重新登入", 2.5);
+      console.log(error.code, error.message);
     }
 
     // 对 values 进行判断，并根据条件执行不同的逻辑

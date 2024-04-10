@@ -14,7 +14,7 @@ const headers = {
 const instance = axios.create({
     // baseURL: 'http://localhost:3000/api',
     baseURL: 'http://cloud.gutemorgan.com:9123/api', // 'http://localhost:8000/api
-    timeout: 1000,
+    timeout: 10000, // 1000ms
     headers: headers,
     withCredentials: true,
 

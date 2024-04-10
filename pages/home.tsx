@@ -85,11 +85,11 @@ export default function Home() {
   React.useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const response = await axios.get("/users/profile");
+        const response = await axios.get("/users/get_user");
         setUsername(response.data.username);
         console.log(response);
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        console.error("getUserInfo error:", error.code, error.message);
       }
     };
 
