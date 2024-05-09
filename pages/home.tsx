@@ -48,6 +48,14 @@ const items: MenuItem[] = [
   getItem("其他", "file", <FileOutlined />),
 ];
 
+const breadcrumbItems = [
+  { title: "系统", url: "/" },
+  { title: "预约系统", url: "/reservation" },
+  // { title: "预约历史", url: "/history" },
+  // { title: "个人信息", url: "/about" },
+  // { title: "其他", url: "/file" },
+];
+
 // type DropdownMenuItem = Required<MenuProps>["items"][number];
 const dropdownMenuItems: MenuProps["items"] = [
   {
@@ -85,11 +93,12 @@ export default function Home() {
   React.useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const response = await axios.get("/users/get_user");
+        const response = await axios.get("/users/get_student_info");
         setUsername(response.data.username);
-        console.log(response);
       } catch (error: any) {
-        console.error("getUserInfo error:", error.code, error.message);
+        if (error.response) var error_response = error.response.data.error;
+        messageApi.error(error_response, 2.5);
+        console.error("getUserInfo error:", error.code, error_response);
       }
     };
 
@@ -180,10 +189,10 @@ export default function Home() {
             </div>
           </Header>
           <Content style={{ margin: "0 16px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>系统</Breadcrumb.Item>
-              <Breadcrumb.Item>预约系统</Breadcrumb.Item>
-            </Breadcrumb>
+            <Breadcrumb
+              style={{ margin: "16px 0" }}
+              items={breadcrumbItems}
+            ></Breadcrumb>
             <div
               style={{
                 display: "flex",

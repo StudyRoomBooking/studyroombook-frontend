@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input, Button, message } from "antd";
 import axios from "../src/services/axios";
 
-export default function Login() {
+export default function Register() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const onFinish = async (values: any) => {
@@ -10,56 +10,21 @@ export default function Login() {
     const data = {
       username: values.username,
       password: values.password,
+      email: values.email,
     };
     try {
-      const response = await axios.post("/auth/login", data);
+      const response = await axios.post("/auth/register", data);
+      //   const response = await axios.post("register", data);
       console.log("Logging in...", response);
       if (response.status === 200) {
-        messageApi.success("登记成功！", 2.5);
-        localStorage.setItem("authToken", response.data.authToken);
+        messageApi.success("注册成功！", 2.5);
         window.location.href = "/home";
       }
     } catch (error: any) {
       var error_response = error.response.data.error;
       messageApi.error(error_response, 2.5);
+      console.log(error);
       console.log(error.code, error.message);
-    }
-
-    // 对 values 进行判断，并根据条件执行不同的逻辑
-    if (values.username.length === 3 && values.password === "123456") {
-      if (values.username[0] === "0") {
-        console.log("Success:", values);
-        messageApi.success("登录成功！", 2.5);
-        window.location.href = "/management_super";
-      } else if (values.username[0] === "1") {
-        console.log("Success:", values);
-        messageApi.success("登录成功！", 2.5);
-        window.location.href = "/management_public";
-      } else if (values.username[0] === "2") {
-        console.log("Success:", values);
-        messageApi.success("登录成功！", 2.5);
-        window.location.href = "/management_cs";
-      } else if (values.username[0] === "3") {
-        console.log("Success:", values);
-        messageApi.success("登录成功！", 2.5);
-        window.location.href = "/management_law";
-      } else {
-        messageApi.error("用户名或密码错误，请重新输入！", 2.5);
-      }
-    } else if (values.username.length === 6 && values.password === "123456") {
-      if (values.username[0] === "2") {
-        console.log("Success:", values);
-        messageApi.success("登录成功！", 2.5);
-        window.location.href = "/home_cs";
-      } else if (values.username[0] === "3") {
-        console.log("Success:", values);
-        messageApi.success("登录成功！", 2.5);
-        window.location.href = "/home_law";
-      } else {
-        messageApi.error("用户名或密码错误，请重新输入！", 2.5);
-      }
-    } else {
-      messageApi.error("用户名或密码错误，请重新输入！", 2.5);
     }
   };
 
@@ -88,9 +53,9 @@ export default function Login() {
         <div style={{ width: "50%" }}>
           <h2
             className="text-black text-5xl"
-            style={{ marginLeft: "80px", paddingTop: "35%" }}
+            style={{ marginLeft: "80px", paddingTop: "40%" }}
           >
-            Login
+            Register
           </h2>
           <p className="text-black text-1xl" style={{ marginLeft: "80px" }}>
             欢迎来StudyRoomBooking
@@ -120,13 +85,19 @@ export default function Login() {
               <Input.Password />
             </Form.Item>
 
+            <Form.Item
+              label="邮箱"
+              name="email"
+              rules={[{ required: true, message: "请输入你的邮箱！" }]}
+            >
+              <Input />
+            </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
-                onClick={() => {
-                  console.log("Login button clicked");
-                }}
+                onClick={() => {}}
                 style={{
                   width: "100%",
                   backgroundColor: "#12B987",
@@ -134,7 +105,7 @@ export default function Login() {
                   marginTop: "50px",
                 }}
               >
-                登录
+                注册
               </Button>
             </Form.Item>
 
@@ -143,7 +114,7 @@ export default function Login() {
                 type="primary"
                 style={{ width: "100%", height: "50px", marginTop: "0px" }}
               >
-                <a href="/register">注册</a>
+                <a href="/login">已有账号？点击这里登录</a>
               </Button>
             </Form.Item>
           </Form>

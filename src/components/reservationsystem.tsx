@@ -509,45 +509,50 @@ export default function PersonalSystem() {
     // 获取房间信息
     const fetchData = async () => {
       try {
-        const response = await axios.get("/bookings/rooms");
-        const dataWithKeys = response.data.map((item: any, index: number) => ({
-          ...item,
-          key: index,
-        }));
-        // console.log(dataWithKeys);
+        const response = await axios.get("/rooms/get_room_info");
+        console.log(response);
+        const dataWithKeys = response.data.room_info.map(
+          (item: any, index: number) => ({
+            // ...item,
+            room_id: item.room_number,
+            room_name: item.room_name,
+            capacity: item.capacity,
+            key: index,
+          })
+        );
+        // // console.log(dataWithKeys);
         setRooms(dataWithKeys);
       } catch (error: any) {
-        console.error(
-          "fetchRoomInformation error: ",
-          error.code,
-          error.message
-        );
+        if (error.response) var error_response = error.response.data.error;
+        console.error("[get_room_info] error:", error.code, error_response);
       }
     };
 
     // 获取预约历史
     const fetchBookingHistory = async () => {
       try {
-        const response = await axios.get("/bookings/bookingHistory");
+        const response = await axios.get("/users/get_student_requests");
         console.log("Booking History", response.data);
-        const bookingHistoryMap = response.data.map(
-          (item: any, index: number) => ({
-            // ...item,
-            booking_id: item.booking_id,
-            room_id: item.room_id,
-            seat_id: item.seat_id,
-            status: item.status,
-            date_booked: moment(item.date_booked).format("YYYY-MM-DD"),
-            time_of_booking: moment(item.time_of_booking).format("YYYY-MM-DD"),
-            hours_booked: extractHourlyBookingsThatAreBooked(
-              item.hours_booked.data
-            ),
-            key: index,
-          })
-        );
-        setBookingHistory(bookingHistoryMap);
+
+        // const bookingHistoryMap = response.data.map(
+        //   (item: any, index: number) => ({
+        //     // ...item,
+        //     booking_id: item.booking_id,
+        //     room_id: item.room_id,
+        //     seat_id: item.seat_id,
+        //     status: item.status,
+        //     date_booked: moment(item.date_booked).format("YYYY-MM-DD"),
+        //     time_of_booking: moment(item.time_of_booking).format("YYYY-MM-DD"),
+        //     hours_booked: extractHourlyBookingsThatAreBooked(
+        //       item.hours_booked.data
+        //     ),
+        //     key: index,
+        //   })
+        // );
+        // setBookingHistory(bookingHistoryMap);
       } catch (error: any) {
-        console.log("fetchingBookingHistory error:", error.code, error.message);
+        if (error.response) var error_response = error.response.data.error;
+        messageApi.error(error_response, 2.5);
       }
     };
 
@@ -597,11 +602,9 @@ export default function PersonalSystem() {
       console.log("Fetching Room Seats...");
       const data = {
         date: date,
+        roomId: roomId,
       };
-      const response = await axios.post(
-        `/bookings/rooms/${roomId}/bookings`,
-        data
-      );
+      const response = await axios.post(`rooms/get_seat_availability/`, data);
       const roomSeatsData = response.data;
       const roomSeatsDataMapped = binaryToHourlyBookings(roomSeatsData);
       console.log("Room seats data", roomSeatsDataMapped);
