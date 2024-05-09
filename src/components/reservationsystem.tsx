@@ -165,17 +165,17 @@ const bookingHistoryColumns = [
     title: "预约时间",
     dataIndex: "hours_booked",
     key: "hours_booked",
-    render: (text: any, record: any) => (
-      <>
-        {record.hours_booked.map((hour: any) => {
-          return (
-            <Tag key={hour}>
-              {hour}-{hour + 1}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    // render: (text: any, record: any) => (
+    //   <>
+    //     {record.hours_booked.map((hour: any) => {
+    //       return (
+    //         <Tag key={hour}>
+    //           {hour}-{hour + 1}
+    //         </Tag>
+    //       );
+    //     })}
+    //   </>
+    // ),
   },
   {
     title: "状态",
@@ -185,7 +185,8 @@ const bookingHistoryColumns = [
       <>
         {[tags].map((tag: any) => {
           let color = "green";
-          if (tag === "booked") {
+          if (tag === "approved") {
+            // booked
             color = "yellow";
           } else if (tag === "cancelled") {
             color = "red";
@@ -510,7 +511,6 @@ export default function PersonalSystem() {
     const fetchData = async () => {
       try {
         const response = await axios.get("/rooms/get_room_info");
-        console.log(response);
         const dataWithKeys = response.data.room_info.map(
           (item: any, index: number) => ({
             // ...item,
@@ -550,6 +550,21 @@ export default function PersonalSystem() {
         //   })
         // );
         // setBookingHistory(bookingHistoryMap);
+
+        const bookingHistoryMap = response.data.map(
+          (item: any, index: number) => ({
+            booking_id: item.reservation_id,
+            room_id: item.room_number,
+            seat_id: item.seat_number,
+            date_booked: item.reservation_date,
+            // time_of_booking: item.request_time,
+            time_of_booking: moment(item.request_time).format("YYYY-MM-DD"),
+            hours_booked: item.reservation_time,
+            status: item.state,
+            key: index,
+          })
+        );
+        setBookingHistory(bookingHistoryMap);
       } catch (error: any) {
         if (error.response) var error_response = error.response.data.error;
         messageApi.error(error_response, 2.5);
