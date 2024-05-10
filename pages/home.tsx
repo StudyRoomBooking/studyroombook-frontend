@@ -6,6 +6,8 @@ import {
   UserOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  AreaChartOutlined,
+  QrcodeOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import {
@@ -28,6 +30,7 @@ import ReservationHistory from "../src/components/reservationhistory";
 import PersonalInfo from "../src/components/personalinfo";
 import OtherContent from "../src/components/other";
 import Kiosk from "../src/components/kiosk";
+import Analytics from "../src/components/analytics";
 
 import axios from "../src/services/axios";
 
@@ -46,7 +49,8 @@ const items: MenuItem[] = [
   getItem("预约系统", "reservation", <PieChartOutlined />),
   getItem("预约历史", "history", <UserOutlined />),
   getItem("个人信息", "about", <TeamOutlined />),
-  getItem("自助登记专柜", "kiosk", <FileOutlined />),
+  getItem("自助登记专柜", "kiosk", <QrcodeOutlined />),
+  getItem("数据分析", "analytics", <AreaChartOutlined />),
   getItem("其他", "file", <FileOutlined />),
 ];
 
@@ -120,6 +124,8 @@ export default function Home() {
         return <PersonalInfo />;
       case "kiosk":
         return <Kiosk />;
+      case "analytics":
+        return <Analytics />;
       case "file":
         return <OtherContent />;
       default:
