@@ -27,6 +27,7 @@ import ReservationSystem from "../src/components/reservationsystem";
 import ReservationHistory from "../src/components/reservationhistory";
 import PersonalInfo from "../src/components/personalinfo";
 import OtherContent from "../src/components/other";
+import Kiosk from "../src/components/kiosk";
 
 import axios from "../src/services/axios";
 
@@ -45,15 +46,13 @@ const items: MenuItem[] = [
   getItem("预约系统", "reservation", <PieChartOutlined />),
   getItem("预约历史", "history", <UserOutlined />),
   getItem("个人信息", "about", <TeamOutlined />),
+  getItem("自助登记专柜", "kiosk", <FileOutlined />),
   getItem("其他", "file", <FileOutlined />),
 ];
 
 const breadcrumbItems = [
   { title: "系统", url: "/" },
   { title: "预约系统", url: "/reservation" },
-  // { title: "预约历史", url: "/history" },
-  // { title: "个人信息", url: "/about" },
-  // { title: "其他", url: "/file" },
 ];
 
 // type DropdownMenuItem = Required<MenuProps>["items"][number];
@@ -119,6 +118,8 @@ export default function Home() {
         return <ReservationHistory />;
       case "about":
         return <PersonalInfo />;
+      case "kiosk":
+        return <Kiosk />;
       case "file":
         return <OtherContent />;
       default:
