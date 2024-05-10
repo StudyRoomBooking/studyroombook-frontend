@@ -26,22 +26,43 @@ const handleCancelBooking = async (record: any) => {
   console.log("Cancel booking", record);
   try {
     const data = {
-      booking_id: record.booking_id,
+      reservation_id: record.booking_id,
+      room_number: record.room_id,
     };
-    const response = await axios.post(`/bookings/cancelBooking`, data);
+    const response = await axios.post(`/reservation/cancel_reservation`, data);
     if (response.status === 200) {
       message.success("取消预约成功", 2.5);
       // Referesh the page
       window.location.reload();
     }
   } catch (error: any) {
-    console.error("handleCancelBooking error:", error.code, error.message);
+    if (error.response) var error_response = error.response.data.error;
+    console.error("handleCancelBooking error:", error.code, error_response);
     message.error("取消预约失败", 2.5);
   }
 };
 
 const handleRebook = async (record: any) => {
   console.log("Rebook", record);
+  try {
+    const data = {
+      date: record.date_booked,
+      room: record.room_id,
+      seat_number: record.seat_id,
+      start_time: record.hours_booked.split(" - ")[0].split(":")[0],
+      end_time: record.hours_booked.split(" - ")[1].split(":")[0],
+    };
+    const response = await axios.post(`/reservation/submit_reservation`, data);
+    if (response.status === 200) {
+      message.success("再约成功", 2.5);
+      // Referesh the page
+      window.location.reload();
+    }
+  } catch (error: any) {
+    if (error.response) var error_response = error.response.data.error;
+    console.error("handleRebook error:", error.code, error_response);
+    message.error("再约失败", 2.5);
+  }
 };
 
 // tagTagRender
@@ -69,16 +90,10 @@ const bookingHistoryColumns = [
       <>
         {[tags].map((tag: any) => {
           let color = "green";
-          if (tag === "approved") {
-            // booked
-            color = "yellow";
-          } else if (tag === "cancelled") {
-            color = "red";
-          } else if (tag === "noshow") {
-            color = "volcano";
-          } else if (tag === "completed") {
-            color = "green";
-          }
+          if (tag === "approved") color = "yellow";
+          else if (tag === "canceled") color = "red";
+          else if (tag === "noshow") color = "volcano";
+          else if (tag === "completed") color = "green";
           return (
             <Tag color={color} key={tag}>
               {tag.toUpperCase()}
@@ -272,8 +287,8 @@ export default function PersonalSystem() {
             room_id: item.room_number,
             seat_id: item.seat_number,
             date_booked: item.reservation_date,
-            // time_of_booking: item.request_time,
-            time_of_booking: moment(item.request_time).format("YYYY-MM-DD"),
+            time_of_booking: item.request_time,
+            // time_of_booking: moment(item.request_time).format("YYYY-MM-DD"),
             hours_booked: item.reservation_time,
             status: item.state,
             key: index,
