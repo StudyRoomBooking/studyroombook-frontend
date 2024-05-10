@@ -7,6 +7,8 @@ import React, { useState, useEffect } from "react";
 import { Button, Input, Space, message, QRCode, Form } from "antd";
 import axios from "../services/axios";
 
+import RoomInfoTable from "./roominfo_table";
+
 export default function Kiosk() {
   const [messageApi, contextHolder] = message.useMessage();
   const [roomNumber, setRoomNumber] = useState(100);
@@ -22,6 +24,7 @@ export default function Kiosk() {
     try {
       // const response = await axios.post("/rooms/get_seat_availability", data);
       const response = await axios.post("/rooms/get_room_kiosk", data);
+      // console.log("Room information:", response);
       setQrCode(response.data.checkin_code);
     } catch (error: any) {
       if (error.response) var error_response = error.response.data.error;
@@ -39,7 +42,6 @@ export default function Kiosk() {
       room_number: checkInRoomNumber,
       checkin_code: checkInCode,
     };
-    console.log("Checking in...", data);
     try {
       const response = await axios.post("/rooms/check_in_kiosk", data);
       if (response.status === 200) {
@@ -65,6 +67,7 @@ export default function Kiosk() {
   return (
     <main>
       {contextHolder} <p>TODO: 修改Kiosk页面</p>
+      <p> 今天的日期 {new Date().toISOString().split("T")[0]}</p>
       <Space.Compact style={{ width: "100%" }}>
         <Input
           defaultValue={roomNumber}
@@ -77,13 +80,9 @@ export default function Kiosk() {
       </Space.Compact>
       {qrCode ? <p> 登记码 {qrCode} </p> : null}
       {qrCode ? <QRCode value={qrCode} /> : null}
+      <p> 房间信息表格</p>
+      {qrCode ? <RoomInfoTable key={qrCode} roomNumber={roomNumber} /> : null}
       <p>签到</p>
-      {/* <Space.Compact style={{ width: "100%" }}>
-        <Input placeholder="验证码" onChange={onRoomCheckinInputChanged} />
-        <Button type="primary" onClick={onRoomCheckin}>
-          签到
-        </Button>
-      </Space.Compact> */}
       <Form>
         <Form.Item label="房间号">
           <Input

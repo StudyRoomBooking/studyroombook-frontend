@@ -142,8 +142,12 @@ export default function Login() {
               <Button
                 type="primary"
                 style={{ width: "100%", height: "50px", marginTop: "0px" }}
+                onClick={() => {
+                  console.log("Register button clicked");
+                  window.location.href = "/register";
+                }}
               >
-                <a href="/register">注册</a>
+                注册
               </Button>
             </Form.Item>
           </Form>

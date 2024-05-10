@@ -14,108 +14,12 @@ import {
 } from "antd";
 import axios from "../../src/services/axios";
 import type { SelectProps } from "antd";
-
-// TODO 清理带吗
-const binaryToHourlyBookings = (data: any) => {
-  const converted = data.map((seat: any) => {
-    const buffer = seat.hours_booked.data;
-
-    // Convert buffer to a binary string representation
-    let binaryString = buffer
-      .map((byte: any) => byte.toString(2).padStart(8, "0"))
-      .join("");
-
-    // Map each bit to its corresponding hour
-    const hourlyBookings: { [key: string]: number } = {};
-    hourlyBookings["key"] = seat.seat_id;
-    hourlyBookings["seat_id"] = seat.seat_id;
-    hourlyBookings["seat_has_outlet"] = seat.seat_has_outlet;
-    for (let hour = 0; hour < binaryString.length; hour++) {
-      const time_day = hour > 12 ? "pm" : "am";
-      if (binaryString[hour] === "1") {
-        hourlyBookings[`_${hour}${time_day}`] = 1;
-      } else hourlyBookings[`_${hour}${time_day}`] = 0;
-    }
-    console.log("Hourly bookings", hourlyBookings);
-    return hourlyBookings; // Return the mapped value
-  });
-
-  return converted;
-};
-
-// 吧二进制转换成小时
-const binaryToHourlyConversion = (data: any) => {
-  let binaryString = data
-    .map((byte: any) => byte.toString(2).padStart(8, "0"))
-    .join("");
-
-  // Map each bit to its corresponding hour
-  const hourlyBookings: { [key: string]: number } = {};
-  for (let hour = 0; hour < binaryString.length; hour++) {
-    const time_day = hour > 12 ? "pm" : "am";
-    if (binaryString[hour] === "1") {
-      hourlyBookings[`_${hour}${time_day}`] = 1;
-    } else hourlyBookings[`_${hour}${time_day}`] = 0;
-  }
-  return hourlyBookings;
-};
-
-// 获取已经预约的时间
-const extractHourlyBookingsThatAreBooked = (data: any) => {
-  const binaryString = data
-    .map((byte: any) => byte.toString(2).padStart(8, "0"))
-    .join("");
-
-  const bookedHours: number[] = [];
-  for (let hour = 0; hour < binaryString.length; hour++) {
-    if (binaryString[hour] === "1") {
-      bookedHours.push(hour);
-    }
-  }
-  return bookedHours;
-};
-
-const extractHourlyBookingsThatAreNotBooked = (data: any) => {
-  const binaryString = data
-    .map((byte: any) => byte.toString(2).padStart(8, "0"))
-    .join("");
-
-  const bookedHours: number[] = [];
-  for (let hour = 0; hour < binaryString.length; hour++) {
-    if (binaryString[hour] === "0") {
-      bookedHours.push(hour);
-    }
-  }
-  return bookedHours;
-};
-
-// 把小时转换成二进制
-const hourlyToBinaryConversion = (data: any) => {
-  let binaryString = "";
-  for (let hour = 0; hour < 24; hour++) {
-    if (data.includes(hour)) {
-      binaryString += "1";
-    } else binaryString += "0";
-  }
-  return binaryString;
-};
+import { time } from "console";
 
 const columns = [
-  {
-    title: "房间号",
-    dataIndex: "room_id",
-    key: "room_id",
-  },
-  {
-    title: "房间名字",
-    dataIndex: "room_name",
-    key: "room_name",
-  },
-  {
-    title: "位置数量",
-    dataIndex: "capacity",
-    key: "capacity",
-  },
+  { title: "房间号", dataIndex: "room_id", key: "room_id" },
+  { title: "房间名字", dataIndex: "room_name", key: "room_name" },
+  { title: "位置数量", dataIndex: "capacity", key: "capacity" },
 ];
 
 const handleCancelBooking = async (record: any) => {
@@ -140,43 +44,23 @@ const handleRebook = async (record: any) => {
   console.log("Rebook", record);
 };
 
+// tagTagRender
+const tTR = (record: any, time: any) => (
+  <>
+    {record[time] === 1 ? (
+      <Tag color="red">已约</Tag>
+    ) : (
+      <Tag color="green">可约</Tag>
+    )}
+  </>
+);
+
 const bookingHistoryColumns = [
-  {
-    title: "房间号",
-    dataIndex: "room_id",
-    key: "room_id",
-  },
-  {
-    title: "位置号",
-    dataIndex: "seat_id",
-    key: "seat_id",
-  },
-  {
-    title: "哪天预约",
-    dataIndex: "time_of_booking",
-    key: "time_of_booking",
-  },
-  {
-    title: "预约日期",
-    dataIndex: "date_booked",
-    key: "date_booked",
-  },
-  {
-    title: "预约时间",
-    dataIndex: "hours_booked",
-    key: "hours_booked",
-    // render: (text: any, record: any) => (
-    //   <>
-    //     {record.hours_booked.map((hour: any) => {
-    //       return (
-    //         <Tag key={hour}>
-    //           {hour}-{hour + 1}
-    //         </Tag>
-    //       );
-    //     })}
-    //   </>
-    // ),
-  },
+  { title: "房间号", dataIndex: "room_id", key: "room_id" },
+  { title: "位置号", dataIndex: "seat_id", key: "seat_id" },
+  { title: "哪天预约", dataIndex: "time_of_booking", key: "time_of_booking" },
+  { title: "预约日期", dataIndex: "date_booked", key: "date_booked" },
+  { title: "预约时间", dataIndex: "hours_booked", key: "hours_booked" },
   {
     title: "状态",
     dataIndex: "status",
@@ -237,253 +121,103 @@ const bookingAvailableColumns = [
     title: "7:00",
     dataIndex: "7am",
     key: "7am",
-    render: (text: any, record: any) => (
-      <>
-        {record._7am === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "7am"),
   },
   {
     title: "8:00",
     dataIndex: "8am",
     key: "8am",
-    render: (text: any, record: any) => (
-      <>
-        {record._8am === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "8am"),
   },
   {
     title: "9:00",
     dataIndex: "9am",
     key: "9am",
-    render: (text: any, record: any) => (
-      <>
-        {record._9am === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "9am"),
   },
   {
     title: "10:00",
     dataIndex: "10am",
     key: "10am",
-    render: (text: any, record: any) => (
-      <>
-        {record._10am === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "10am"),
   },
   {
     title: "11:00",
     dataIndex: "11am",
     key: "11am",
-    render: (text: any, record: any) => (
-      <>
-        {record._11am === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "11am"),
   },
   {
     title: "12:00",
     dataIndex: "12am",
     key: "12am",
-    render: (text: any, record: any) => (
-      <>
-        {record._12am === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "12am"),
   },
   {
     title: "13:00",
     dataIndex: "13pm",
     key: "13pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._13pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "13pm"),
   },
   {
     title: "14:00",
     dataIndex: "14pm",
     key: "14pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._14pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "14pm"),
   },
   {
     title: "15:00",
     dataIndex: "15pm",
     key: "15pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._15pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
-  },
-  {
-    title: "15:00",
-    dataIndex: "15pm",
-    key: "15pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._15pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "15pm"),
   },
   {
     title: "16:00",
     dataIndex: "16pm",
     key: "16pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._16pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "16pm"),
   },
   {
     title: "17:00",
     dataIndex: "17pm",
     key: "17pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._17pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "17pm"),
   },
   {
     title: "18:00",
     dataIndex: "18pm",
     key: "18pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._18pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "18pm"),
   },
   {
     title: "19:00",
     dataIndex: "19pm",
     key: "19pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._19pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "19pm"),
   },
   {
     title: "20:00",
     dataIndex: "20pm",
     key: "20pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._20pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "20pm"),
   },
   {
     title: "21:00",
     dataIndex: "21pm",
     key: "21pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._21pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "21pm"),
   },
   {
     title: "22:00",
     dataIndex: "22pm",
     key: "22pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._22pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "22pm"),
   },
   {
     title: "23:00",
     dataIndex: "23pm",
     key: "23pm",
-    render: (text: any, record: any) => (
-      <>
-        {record._23pm === 1 ? (
-          <Tag color="red">已约</Tag>
-        ) : (
-          <Tag color="green">可约</Tag>
-        )}
-      </>
-    ),
+    render: (t: any, r: any) => tTR(r, "23pm"),
   },
 ];
 
@@ -532,25 +266,6 @@ export default function PersonalSystem() {
     const fetchBookingHistory = async () => {
       try {
         const response = await axios.get("/users/get_student_requests");
-        console.log("Booking History", response.data);
-
-        // const bookingHistoryMap = response.data.map(
-        //   (item: any, index: number) => ({
-        //     // ...item,
-        //     booking_id: item.booking_id,
-        //     room_id: item.room_id,
-        //     seat_id: item.seat_id,
-        //     status: item.status,
-        //     date_booked: moment(item.date_booked).format("YYYY-MM-DD"),
-        //     time_of_booking: moment(item.time_of_booking).format("YYYY-MM-DD"),
-        //     hours_booked: extractHourlyBookingsThatAreBooked(
-        //       item.hours_booked.data
-        //     ),
-        //     key: index,
-        //   })
-        // );
-        // setBookingHistory(bookingHistoryMap);
-
         const bookingHistoryMap = response.data.map(
           (item: any, index: number) => ({
             booking_id: item.reservation_id,
@@ -583,25 +298,30 @@ export default function PersonalSystem() {
   const handleSeatSelect = (seatId: string) => {
     console.log("Seat selected", seatId);
     setSelectedSeatId(seatId);
-    const seatHours = roomSeats.find((seat: any) => seat.seat_id === seatId);
+    const seatHours: any = roomSeats.find(
+      (seat: any) => seat.seat_id === seatId
+    );
+    console.log(seatHours);
     let availableSeatHours: SelectProps["options"] = [];
-    let startingHour: number = 0;
+
     for (let key in seatHours) {
-      if (key[0] === "_") {
-        if (seatHours[key] === 0) {
-          availableSeatHours.push({
-            label: startingHour + ":00 - " + (startingHour + 1) + ":00",
-            value: startingHour,
-            key: startingHour,
-          });
-        }
-        startingHour++;
-      }
+      // { "7am": 0, "8am": 0, ... } Translate to options
+      var time = 0;
+      if (key.includes("pm")) time = parseInt(key.split("pm")[0]);
+      else if (key.includes("am")) time = parseInt(key.split("am")[0]);
+      else continue;
+
+      if (seatHours[key] !== 0) continue; // Skip if not available
+
+      availableSeatHours.push({
+        label: key,
+        value: time,
+        key: time,
+      });
     }
 
     console.log("Seat hours", availableSeatHours);
     setSelectedSeatIdHours(availableSeatHours);
-    // setSelectedSeatIdHours(seatHours);
   };
 
   const handleDateSelect = (date: any) => {
@@ -613,17 +333,52 @@ export default function PersonalSystem() {
   // 获取房间座位信息
   const fetchRoomSeats = async (roomId: string, date: string) => {
     try {
-      // const response = await axios.get(`/bookings/rooms/${roomId}/seats`);
-      console.log("Fetching Room Seats...");
-      const data = {
-        date: date,
-        roomId: roomId,
-      };
-      const response = await axios.post(`rooms/get_seat_availability/`, data);
-      const roomSeatsData = response.data;
-      const roomSeatsDataMapped = binaryToHourlyBookings(roomSeatsData);
-      console.log("Room seats data", roomSeatsDataMapped);
+      const data = { date: date, room: roomId };
+      const response = await axios.post(`/rooms/get_seat_availability`, data);
+      // Returns ['0', '1', '0',...] of length room capacity * 24
+      var roomSeatsData = response.data.message;
+      // Split the array into 24 hour chunks
+      roomSeatsData = roomSeatsData.reduce(
+        (resultArray: any, item: any, index: any) => {
+          const chunkIndex = Math.floor(index / 24);
+          if (!resultArray[chunkIndex]) {
+            resultArray[chunkIndex] = []; // start a new chunk
+          }
+          // to int
+          item = parseInt(item);
+          resultArray[chunkIndex].push(item);
+          return resultArray;
+        },
+        []
+      );
+
+      // Map the data to table columns
+      // TODO Don't hardcode the hours
+      const roomSeatsDataMapped = roomSeatsData.map(
+        (seat: any, index: any) => ({
+          seat_id: index,
+          "7am": seat[7],
+          "8am": seat[8],
+          "9am": seat[9],
+          "10am": seat[10],
+          "11am": seat[11],
+          "12am": seat[12],
+          "13pm": seat[13],
+          "14pm": seat[14],
+          "15pm": seat[15],
+          "16pm": seat[16],
+          "17pm": seat[17],
+          "18pm": seat[18],
+          "19pm": seat[19],
+          "20pm": seat[20],
+          "21pm": seat[21],
+          "22pm": seat[22],
+          "23pm": seat[23],
+          key: index,
+        })
+      );
       setRoomSeats(roomSeatsDataMapped);
+      console.log("Room seats", roomSeatsDataMapped);
     } catch (error: any) {
       console.error("fetchRoomSeats error:", error.code, error.message);
     }
@@ -632,20 +387,26 @@ export default function PersonalSystem() {
   const onFinish = async (values: any) => {
     console.log("Finished", values);
     const data = {
-      room_id: values.room,
-      date_booked: values.date.format("YYYY-MM-DD"),
-      hours_booked: hourlyToBinaryConversion(values.times_selected),
-      seat_id: values.seat,
+      date: values.date.format("YYYY-MM-DD"),
+      room: values.room,
+      seat_number: values.seat,
+      start_time: values.times_selected[0],
+      end_time: values.times_selected[1],
     };
     console.log(data);
     try {
       // Booking at /rooms/:roomId/seats/:seatId/book'
-      const response = await axios.post(`/bookings/bookseat`, data);
+      const response = await axios.post(
+        `/reservation/submit_reservation`,
+        data
+      );
       if (response.status === 200) {
         messageApi.success("预约成功！", 2.5);
       }
-    } catch (error) {
-      messageApi.error("预约失败，请重新预约", 2.5);
+    } catch (error: any) {
+      if (error.response) var error_response = error.response.data.error;
+      messageApi.error(error_response, 2.5);
+      console.error("onFinish error:", error.code, error_response);
     }
   };
 
@@ -655,9 +416,10 @@ export default function PersonalSystem() {
 
   return (
     <main style={{ width: "100%" }}>
+      {contextHolder}
       <p>TODO: 房间信息 </p>
       <Table dataSource={rooms} columns={columns} />
-      <p>TODO: 预约历史表格</p>
+      <p>TODO: 我的预约历史表格</p>
       <Table dataSource={bookingHistory} columns={bookingHistoryColumns} />
       <p>TODO: 预约表格</p>
       <Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
@@ -677,6 +439,7 @@ export default function PersonalSystem() {
         <Form.Item label="预约日期" name="date">
           <DatePicker value={selectedDate} onChange={handleDateSelect} />
         </Form.Item>
+        <p>可预约表格</p>
         <Table
           columns={bookingAvailableColumns}
           dataSource={roomSeats}
@@ -691,8 +454,8 @@ export default function PersonalSystem() {
           >
             {roomSeats.map((seat: any) => (
               <Select.Option key={seat.seat_id} value={seat.seat_id}>
-                房间号{seat.room_id}, 位置Id是{seat.seat_id}, 有充电口
-                {seat.seat_has_outlet}
+                房间号{seat.room_id}, 位置Id是{seat.seat_id}
+                {/* 有充电口 {seat.seat_has_outlet} */}
               </Select.Option>
             ))}
           </Select>

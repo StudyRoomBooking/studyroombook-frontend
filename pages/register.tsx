@@ -113,8 +113,11 @@ export default function Register() {
               <Button
                 type="primary"
                 style={{ width: "100%", height: "50px", marginTop: "0px" }}
+                onClick={() => {
+                  window.location.href = "/login";
+                }}
               >
-                <a href="/login">已有账号？点击这里登录</a>
+                已有账号？点击这里登录
               </Button>
             </Form.Item>
           </Form>
