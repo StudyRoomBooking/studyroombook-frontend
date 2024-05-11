@@ -15,7 +15,8 @@ import {
 } from "antd";
 import axios from "../../src/services/axios";
 import type { SelectProps } from "antd";
-import { time } from "console";
+
+import { tzconversion } from "../utils/helper";
 
 const columns = [
   { title: "房间号", dataIndex: "room_id", key: "room_id" },
@@ -65,19 +66,6 @@ const handleRebook = async (record: any) => {
     message.error("再约失败", 2.5);
   }
 };
-
-function convertUTCToShanghai(utcTimeString: any) {
-  // Parse the UTC time string by explicitly setting the timezone to UTC
-  const timeInUTC = moment.utc(utcTimeString);
-
-  // Convert to Shanghai time
-  const timeInShanghai = timeInUTC
-    .tz("Asia/Shanghai")
-    .format("YYYY-MM-DD HH:mm:ss");
-  // .format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ [(China Standard Time)]");
-
-  return timeInShanghai;
-}
 
 // tagTagRender
 const tTR = (record: any, time: any) => (
@@ -264,10 +252,6 @@ export default function PersonalSystem() {
   const [endTime, setEndTime] = React.useState(dayjs());
   const [bookingHistory, setBookingHistory] = React.useState([]);
 
-  // const handleCancelBooking = async (record: any) => {
-  //   console.log("Cancel booking", record);
-  // };
-
   // useEffect钩子 用于在组件挂载后执行一些操作
   React.useEffect(() => {
     // 获取房间信息
@@ -283,10 +267,10 @@ export default function PersonalSystem() {
             key: index,
           })
         );
-        // // console.log(dataWithKeys);
         setRooms(dataWithKeys);
       } catch (error: any) {
         if (error.response) var error_response = error.response.data.error;
+        messageApi.error(error_response, 2.5);
         console.error("[get_room_info] error:", error.code, error_response);
       }
     };
@@ -295,11 +279,7 @@ export default function PersonalSystem() {
     const fetchBookingHistory = async () => {
       try {
         const response = await axios.get("/users/get_student_requests");
-        console.log("Booking history", response.data);
-        console.log(
-          "Timezone",
-          moment().tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm:ss")
-        );
+        // console.log("Booking history", response.data);
         const bookingHistoryMap = response.data.map(
           (item: any, index: number) => ({
             booking_id: item.reservation_id,
@@ -308,7 +288,8 @@ export default function PersonalSystem() {
             date_booked: item.reservation_date,
             // time_of_booking: item.request_time
             // time_of_booking: new Date(item.request_time).toString(),
-            time_of_booking: convertUTCToShanghai(item.request_time),
+            // time_of_booking: convertUTCToShanghai(item.request_time),
+            time_of_booking: tzconversion(item.request_time),
             hours_booked: item.reservation_time,
             status: item.state,
             key: index,
@@ -326,12 +307,10 @@ export default function PersonalSystem() {
   }, []);
 
   const handleRoomSelect = (roomId: string) => {
-    console.log("Room selected", roomId);
     setSelectedRoomId(roomId);
   };
 
   const handleSeatSelect = (seatId: string) => {
-    console.log("Seat selected", seatId);
     setSelectedSeatId(seatId);
     const seatHours: any = roomSeats.find(
       (seat: any) => seat.seat_id === seatId
@@ -360,15 +339,18 @@ export default function PersonalSystem() {
   };
 
   const handleDateSelect = (date: any) => {
-    console.log("Selected date", date.format("YYYY-MM-DD"));
+    if (date === null) return;
     setSelectedDate(date);
-    fetchRoomSeats(selectedRoomId, date.format("YYYY-MM-DD"));
+    console.log("[handleDateSelect] date", typeof date);
+    fetchRoomSeats(selectedRoomId, date);
   };
 
   // 获取房间座位信息
   const fetchRoomSeats = async (roomId: string, date: string) => {
     try {
       const data = { date: date, room: roomId };
+      console.log("[fetchRoomSeats] data", data);
+      console.log("[fetchRoomSeats] date", typeof date);
       const response = await axios.post(`/rooms/get_seat_availability`, data);
       // Returns ['0', '1', '0',...] of length room capacity * 24
       var roomSeatsData = response.data.message;
@@ -415,14 +397,15 @@ export default function PersonalSystem() {
       setRoomSeats(roomSeatsDataMapped);
       console.log("Room seats", roomSeatsDataMapped);
     } catch (error: any) {
-      console.error("fetchRoomSeats error:", error.code, error.message);
+      if (error.response) var error_response = error.response.data.error;
+      console.error("fetchRoomSeats error:", error.code, error_response);
     }
   };
 
   const onFinish = async (values: any) => {
     console.log("Finished", values);
     const data = {
-      date: values.date.format("YYYY-MM-DD"),
+      date: values.date,
       room: values.room,
       seat_number: values.seat,
       start_time: values.times_selected[0],

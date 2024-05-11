@@ -6,25 +6,23 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Space, message, QRCode, Form } from "antd";
 import axios from "../services/axios";
-
 import RoomInfoTable from "./roominfo_table";
 
 export default function Kiosk() {
   const [messageApi, contextHolder] = message.useMessage();
   const [roomNumber, setRoomNumber] = useState(100);
   const [checkInRoomNumber, setCheckInRoomNumber] = useState(0);
+  const [checkInSeatNumber, setCheckInSeatNumber] = useState(0);
   const [checkInCode, setCheckInCode] = useState("");
   const [qrCode, setQrCode] = useState("");
 
+  React.useEffect(() => {}, []);
+
   const onRoomSearch = async () => {
-    const data = {
-      room: roomNumber,
-    };
+    const data = { room: roomNumber };
 
     try {
-      // const response = await axios.post("/rooms/get_seat_availability", data);
       const response = await axios.post("/rooms/get_room_kiosk", data);
-      // console.log("Room information:", response);
       setQrCode(response.data.checkin_code);
     } catch (error: any) {
       if (error.response) var error_response = error.response.data.error;
@@ -37,14 +35,20 @@ export default function Kiosk() {
     setRoomNumber(e.target.value);
   };
 
+  const onCheckInSeatNumberChanged = (e: any) => {
+    setCheckInSeatNumber(e.target.value);
+  };
+
   const onRoomCheckin = async () => {
     const data = {
       room_number: checkInRoomNumber,
+      seat_number: checkInSeatNumber,
       checkin_code: checkInCode,
     };
     try {
       const response = await axios.post("/rooms/check_in_kiosk", data);
       const username = response.data.username;
+
       if (response.status === 200) {
         messageApi.success(username + "学生签到成功！", 2.5);
       }
@@ -89,6 +93,12 @@ export default function Kiosk() {
           <Input
             defaultValue={checkInRoomNumber}
             onChange={onRoomCheckinRoomInputChanged}
+          />
+        </Form.Item>
+        <Form.Item label="座位号">
+          <Input
+            defaultValue={checkInSeatNumber}
+            onChange={onCheckInSeatNumberChanged}
           />
         </Form.Item>
         <Form.Item label="验证码">

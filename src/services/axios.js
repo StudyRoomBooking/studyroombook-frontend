@@ -19,16 +19,48 @@ const instance = axios.create({
     headers: headers,
     // withCredentials: true,
     withCredentials: false,
-
 });
+
+import { formatISO, parseISO } from 'date-fns';
+
+// Function to convert date fields specifically named "date" to UTC
+function convertDateFieldsToUTC(obj) {
+    Object.keys(obj).forEach(key => {
+        if (key === "date" && typeof obj[key] === 'string') {
+            try {
+                // const parsedDate = parseISO(obj[key]);
+                // obj[key] = formatISO(parsedDate, { representation: 'complete' });
+
+                // obj[key] must be in what format
+
+
+                // Use YYYY-MM-DD format
+                const parsedDate = parseISO(obj[key]);
+                obj[key] = format(parsedDate, 'yyyy-MM-dd');
+                console.log(obj[key]);
+
+            } catch (error) {
+                console.error('Failed to convert date:', obj[key], error);
+            }
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            convertDateFieldsToUTC(obj[key]); // Recursively handle nested objects
+        }
+    });
+}
+
 
 // Add interceptor to do something before request is sent
 instance.interceptors.request.use(
     config => {
-        const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken")
+        const { data } = config;
+        // convertDateFieldsToUTC(data);
+        if (data && typeof data === 'object') {
+            console.log("[intercepters request data]", data);
+            convertDateFieldsToUTC(data)
+        }
 
-        // console.log('token', token);
-
+        // Apply Token
+        const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }

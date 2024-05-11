@@ -8,6 +8,7 @@ import {
   MenuUnfoldOutlined,
   AreaChartOutlined,
   QrcodeOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import {
@@ -24,6 +25,8 @@ import {
 } from "antd";
 const { Header, Content, Footer, Sider } = Layout;
 
+import moment from "moment-timezone";
+
 import logo from "../public/studyroombook_no_bg.png";
 import ReservationSystem from "../src/components/reservationsystem";
 import ReservationHistory from "../src/components/reservationhistory";
@@ -31,8 +34,10 @@ import PersonalInfo from "../src/components/personalinfo";
 import OtherContent from "../src/components/other";
 import Kiosk from "../src/components/kiosk";
 import Analytics from "../src/components/analytics";
+import Management from "../src/components/management";
 
 import axios from "../src/services/axios";
+import { tzconversion } from "@/utils/helper";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -51,6 +56,7 @@ const items: MenuItem[] = [
   getItem("个人信息", "about", <TeamOutlined />),
   getItem("自助登记专柜", "kiosk", <QrcodeOutlined />),
   getItem("数据分析", "analytics", <AreaChartOutlined />),
+  getItem("管理", "management", <EyeOutlined />),
   getItem("其他", "file", <FileOutlined />),
 ];
 
@@ -85,6 +91,8 @@ const menuProps = {
 
 export default function Home() {
   const [messageApi, contextHolder] = message.useMessage();
+  const [timeZone, setTimeZone] = useState("");
+  const [timeZoneTime, setTimeZoneTime] = useState("");
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState("reservation");
   const [username, setUsername] = useState("用户名字");
@@ -94,6 +102,10 @@ export default function Home() {
 
   // useEffect钩子 用于在组件挂载后。。。
   React.useEffect(() => {
+    const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setTimeZone(defaultTimezone);
+    setTimeZoneTime(moment().tz(defaultTimezone).format("YYYY-MM-DD HH:mm:ss"));
+
     const getUserInfo = async () => {
       try {
         const response = await axios.get("/users/get_student_info");
@@ -104,7 +116,6 @@ export default function Home() {
         console.error("getUserInfo error:", error.code, error_response);
       }
     };
-
     getUserInfo();
   }, []);
 
@@ -126,6 +137,8 @@ export default function Home() {
         return <Kiosk />;
       case "analytics":
         return <Analytics />;
+      case "management":
+        return <Management />;
       case "file":
         return <OtherContent />;
       default:
@@ -135,6 +148,7 @@ export default function Home() {
 
   return (
     <main className="flex items-center justify-center bg-white">
+      {contextHolder}
       <Layout style={{ minHeight: "100vh" }}>
         <Sider
           collapsible
@@ -215,7 +229,9 @@ export default function Home() {
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            StudyRoomBooking ©{new Date().getFullYear()} Created by Team 30
+            StudyRoomBooking ©{new Date().getFullYear()} Created by Team 30{" "}
+            <br />
+            {timeZone} {timeZoneTime}
           </Footer>
         </Layout>
       </Layout>
