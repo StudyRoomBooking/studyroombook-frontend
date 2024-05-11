@@ -1,5 +1,6 @@
 import React from "react";
-import moment from "moment";
+// import moment from "moment";
+import moment from "moment-timezone";
 import dayjs from "dayjs";
 import {
   Table,
@@ -64,6 +65,19 @@ const handleRebook = async (record: any) => {
     message.error("再约失败", 2.5);
   }
 };
+
+function convertUTCToShanghai(utcTimeString: any) {
+  // Parse the UTC time string by explicitly setting the timezone to UTC
+  const timeInUTC = moment.utc(utcTimeString);
+
+  // Convert to Shanghai time
+  const timeInShanghai = timeInUTC
+    .tz("Asia/Shanghai")
+    .format("YYYY-MM-DD HH:mm:ss");
+  // .format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ [(China Standard Time)]");
+
+  return timeInShanghai;
+}
 
 // tagTagRender
 const tTR = (record: any, time: any) => (
@@ -281,14 +295,20 @@ export default function PersonalSystem() {
     const fetchBookingHistory = async () => {
       try {
         const response = await axios.get("/users/get_student_requests");
+        console.log("Booking history", response.data);
+        console.log(
+          "Timezone",
+          moment().tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm:ss")
+        );
         const bookingHistoryMap = response.data.map(
           (item: any, index: number) => ({
             booking_id: item.reservation_id,
             room_id: item.room_number,
             seat_id: item.seat_number,
             date_booked: item.reservation_date,
-            time_of_booking: item.request_time,
-            // time_of_booking: moment(item.request_time).format("YYYY-MM-DD"),
+            // time_of_booking: item.request_time
+            // time_of_booking: new Date(item.request_time).toString(),
+            time_of_booking: convertUTCToShanghai(item.request_time),
             hours_booked: item.reservation_time,
             status: item.state,
             key: index,

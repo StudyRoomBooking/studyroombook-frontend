@@ -44,8 +44,9 @@ export default function Kiosk() {
     };
     try {
       const response = await axios.post("/rooms/check_in_kiosk", data);
+      const username = response.data.username;
       if (response.status === 200) {
-        messageApi.success("签到成功！", 2.5);
+        messageApi.success(username + "学生签到成功！", 2.5);
       }
     } catch (error: any) {
       if (error.response) {

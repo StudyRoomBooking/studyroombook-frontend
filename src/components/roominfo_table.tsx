@@ -7,31 +7,11 @@ import { Table, message, Tag } from "antd";
 import axios from "../services/axios";
 
 const bookingHistoryColumns = [
-  {
-    title: "房间号",
-    dataIndex: "room_id",
-    key: "room_id",
-  },
-  {
-    title: "位置号",
-    dataIndex: "seat_id",
-    key: "seat_id",
-  },
-  {
-    title: "哪天预约",
-    dataIndex: "time_of_booking",
-    key: "time_of_booking",
-  },
-  {
-    title: "预约日期",
-    dataIndex: "date_booked",
-    key: "date_booked",
-  },
-  {
-    title: "预约时间",
-    dataIndex: "hours_booked",
-    key: "hours_booked",
-  },
+  { title: "房间号", dataIndex: "room_id", key: "room_id" },
+  { title: "位置号", dataIndex: "seat_id", key: "seat_id" },
+  { title: "哪天预约", dataIndex: "time_of_booking", key: "time_of_booking" },
+  { title: "预约日期", dataIndex: "date_booked", key: "date_booked" },
+  { title: "预约时间", dataIndex: "hours_booked", key: "hours_booked" },
   {
     title: "状态",
     dataIndex: "status",
@@ -43,7 +23,7 @@ const bookingHistoryColumns = [
           if (tag === "approved") {
             // booked
             color = "yellow";
-          } else if (tag === "cancelled") {
+          } else if (tag === "canceled") {
             color = "red";
           } else if (tag === "noshow") {
             color = "volcano";
@@ -76,9 +56,9 @@ export default function RoomInfoTable(props: any) {
         const data = {
           room_number: props.roomNumber,
           // Todays date in YYYY-MM-DD format
-          //   date: new Date().toISOString().split("T")[0],
+          date: new Date().toISOString().split("T")[0],
           // TODO Test date
-          date: "2024-05-09",
+          //   date: "2024-05-09",
         };
         const response = await axios.post(
           "/reservation/get_room_reservations",
