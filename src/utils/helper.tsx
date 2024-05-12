@@ -27,6 +27,16 @@ function tzconversion(utcTimeString: any) {
   return timeInShanghai;
 }
 
-// Conversion from localtime to UTC
-
-export { getLocalTime, tzconversion };
+// "2024-05-12 12:00:00" -> "2024-05-12 12:00 PM"
+const getDateHourAmPm = (dateStr: any) => {
+  const date = new Date(dateStr);
+  const options: any = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    hour12: true,
+  };
+  return date.toLocaleString("en-US", options).replace(",", "");
+};
+export { getLocalTime, tzconversion, getDateHourAmPm };

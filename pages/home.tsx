@@ -96,6 +96,7 @@ export default function Home() {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState("reservation");
   const [username, setUsername] = useState("用户名字");
+  const [college, setCollege] = useState("学院");
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -110,6 +111,7 @@ export default function Home() {
       try {
         const response = await axios.get("/users/get_student_info");
         setUsername(response.data.username);
+        setCollege(response.data.college);
       } catch (error: any) {
         if (error.response) var error_response = error.response.data.error;
         messageApi.error(error_response, 2.5);
@@ -201,6 +203,7 @@ export default function Home() {
             </div>
             <div className="mx-6">
               <Space>
+                <p className="text-black">{college}</p>
                 <p className="text-black">{username}</p>
                 <Avatar shape="square" size={32} icon={<UserOutlined />} />
                 {/* <Dropdown.Button menu={menuProps} placement="bottomLeft">

@@ -14,7 +14,6 @@ export default function Register() {
     };
     try {
       const response = await axios.post("/auth/register", data);
-      //   const response = await axios.post("register", data);
       console.log("Logging in...", response);
       if (response.status === 200) {
         messageApi.success("注册成功！", 2.5);

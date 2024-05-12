@@ -16,12 +16,14 @@ import {
 import axios from "../../src/services/axios";
 import type { SelectProps } from "antd";
 
-import { tzconversion } from "../utils/helper";
+import { tzconversion, getDateHourAmPm } from "../utils/helper";
 
 const columns = [
   { title: "房间号", dataIndex: "room_id", key: "room_id" },
   { title: "房间名字", dataIndex: "room_name", key: "room_name" },
   { title: "位置数量", dataIndex: "capacity", key: "capacity" },
+  { title: "最早可预约时间", dataIndex: "start_time", key: "start_time" },
+  { title: "最晚可预约时间", dataIndex: "end_time", key: "end_time" },
 ];
 
 const handleCancelBooking = async (record: any) => {
@@ -81,8 +83,28 @@ const tTR = (record: any, time: any) => (
 const bookingHistoryColumns = [
   { title: "房间号", dataIndex: "room_id", key: "room_id" },
   { title: "位置号", dataIndex: "seat_id", key: "seat_id" },
-  { title: "哪天预约", dataIndex: "time_of_booking", key: "time_of_booking" },
-  { title: "预约日期", dataIndex: "date_booked", key: "date_booked" },
+  {
+    title: "哪天预约",
+    dataIndex: "time_of_booking",
+    key: "time_of_booking",
+    defaultSortOrder: "descend",
+    sorter: (a: any, b: any) => {
+      const dateA = new Date(a.time_of_booking as string);
+      const dateB = new Date(b.time_of_booking as string);
+      return dateA.getTime() - dateB.getTime();
+    },
+  },
+  {
+    title: "预约日期",
+    dataIndex: "date_booked",
+    key: "date_booked",
+    defaultSortOrder: "descend",
+    sorter: (a: any, b: any) => {
+      const dateA = new Date(a.date_booked as string);
+      const dateB = new Date(b.date_booked as string);
+      return dateA.getTime() - dateB.getTime();
+    },
+  },
   { title: "预约时间", dataIndex: "hours_booked", key: "hours_booked" },
   {
     title: "状态",
@@ -94,8 +116,8 @@ const bookingHistoryColumns = [
           let color = "green";
           if (tag === "approved") color = "yellow";
           else if (tag === "canceled") color = "red";
-          else if (tag === "noshow") color = "volcano";
-          else if (tag === "completed") color = "green";
+          else if (tag === "noshow") color = "purple";
+          else if (tag === "checked_in") color = "green";
           return (
             <Tag color={color} key={tag}>
               {tag.toUpperCase()}
@@ -120,6 +142,7 @@ const bookingHistoryColumns = [
             取消
           </Button>
         </Popconfirm>
+        <div style={{ margin: "5px" }}></div>
         <Button
           type="primary"
           onClick={() => handleRebook(record)}
@@ -248,8 +271,6 @@ export default function PersonalSystem() {
   const [selectedSeatIdHours, setSelectedSeatIdHours] = React.useState<
     SelectProps["options"]
   >([]);
-  const [startTime, setStartTime] = React.useState(dayjs());
-  const [endTime, setEndTime] = React.useState(dayjs());
   const [bookingHistory, setBookingHistory] = React.useState([]);
 
   // useEffect钩子 用于在组件挂载后执行一些操作
@@ -264,6 +285,8 @@ export default function PersonalSystem() {
             room_id: item.room_number,
             room_name: item.room_name,
             capacity: item.capacity,
+            start_time: item.start_time,
+            end_time: item.end_time,
             key: index,
           })
         );
@@ -280,17 +303,23 @@ export default function PersonalSystem() {
       try {
         const response = await axios.get("/users/get_student_requests");
         // console.log("Booking history", response.data);
+        // response.data["start_time"] is UTC, convert to Shanghai time
+        console.log("fetchBookingHistory", response.data);
         const bookingHistoryMap = response.data.map(
           (item: any, index: number) => ({
             booking_id: item.reservation_id,
             room_id: item.room_number,
             seat_id: item.seat_number,
-            date_booked: item.reservation_date,
+            date_booked: `${getDateHourAmPm(tzconversion(item.start_time))}`,
             // time_of_booking: item.request_time
             // time_of_booking: new Date(item.request_time).toString(),
             // time_of_booking: convertUTCToShanghai(item.request_time),
             time_of_booking: tzconversion(item.request_time),
-            hours_booked: item.reservation_time,
+            // hours_booked: item.reservation_time,
+            // hours_booked: item.start_time + " - " + item.end_time,
+            hours_booked: `${getDateHourAmPm(
+              tzconversion(item.start_time)
+            )} - ${getDateHourAmPm(tzconversion(item.end_time))}`,
             status: item.state,
             key: index,
           })
@@ -341,17 +370,21 @@ export default function PersonalSystem() {
   const handleDateSelect = (date: any) => {
     if (date === null) return;
     setSelectedDate(date);
-    console.log("[handleDateSelect] date", typeof date);
+    console.log("Selected date", date);
     fetchRoomSeats(selectedRoomId, date);
   };
 
   // 获取房间座位信息
   const fetchRoomSeats = async (roomId: string, date: string) => {
     try {
-      const data = { date: date, room: roomId };
-      console.log("[fetchRoomSeats] data", data);
-      console.log("[fetchRoomSeats] date", typeof date);
+      const timezoneOffset = new Date().getTimezoneOffset(); // Gets
+      const data = {
+        date: date,
+        room: roomId,
+        timezone_offset: timezoneOffset,
+      };
       const response = await axios.post(`/rooms/get_seat_availability`, data);
+      console.log("fetchRoomSeats", response.data.message);
       // Returns ['0', '1', '0',...] of length room capacity * 24
       var roomSeatsData = response.data.message;
       // Split the array into 24 hour chunks
@@ -368,6 +401,7 @@ export default function PersonalSystem() {
         },
         []
       );
+      console.log("Reduced", roomSeatsData);
 
       // Map the data to table columns
       // TODO Don't hardcode the hours
@@ -395,8 +429,8 @@ export default function PersonalSystem() {
         })
       );
       setRoomSeats(roomSeatsDataMapped);
-      console.log("Room seats", roomSeatsDataMapped);
     } catch (error: any) {
+      console.log(error);
       if (error.response) var error_response = error.response.data.error;
       console.error("fetchRoomSeats error:", error.code, error_response);
     }
@@ -404,12 +438,29 @@ export default function PersonalSystem() {
 
   const onFinish = async (values: any) => {
     console.log("Finished", values);
+    // Change start_time and end_time to 24 hour format, dayjs, start_time is an int
+    const start_hour = values.times_selected[0];
+    const end_hour = values.times_selected[1];
+    // use values.date as the date, add the hour
+    const start_time = dayjs()
+      .date(values.date.date())
+      .hour(start_hour)
+      .minute(0)
+      .second(0);
+
+    const end_time = dayjs()
+      .date(values.date.date())
+      .hour(end_hour)
+      .minute(0)
+      .second(0);
+
+    console.log("onFinish", values.date, start_time, end_time);
     const data = {
       date: values.date,
       room: values.room,
       seat_number: values.seat,
-      start_time: values.times_selected[0],
-      end_time: values.times_selected[1],
+      start_time: start_time,
+      end_time: end_time,
     };
     console.log(data);
     try {
@@ -426,6 +477,9 @@ export default function PersonalSystem() {
       messageApi.error(error_response, 2.5);
       console.error("onFinish error:", error.code, error_response);
     }
+
+    // Reload the page
+    window.location.reload();
   };
 
   const onFinishFailed = (errorInfo: any) => {

@@ -157,6 +157,9 @@ export default function Analytics() {
         />
         <Legend />
       </PieChart>
+      <p> 获取所有当前noshow的预约 </p>
+      <p> 获取所有当前cancelled的预约 </p>
+
       <p> 一周的每个房间每小时的预约分布 </p>
       <Space.Compact style={{ width: "100%" }}>
         <Input

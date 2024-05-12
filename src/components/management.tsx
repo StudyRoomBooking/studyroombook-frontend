@@ -14,7 +14,7 @@ const deleteRoom = async (room: any) => {
   message.error("删除房间功能尚未实现");
 };
 
-const rooms = []
+const rooms = [
   { title: "房间号", dataIndex: "room_id", key: "room_id" },
   { title: "房间名字", dataIndex: "room_name", key: "room_name" },
   { title: "位置数量", dataIndex: "capacity", key: "capacity" },
@@ -50,13 +50,6 @@ const rooms = []
     ),
   },
 ];
-
-interface ExpandedDataType {
-  key: React.Key;
-  room_id: string;
-  name: string;
-  upgradeNum: number;
-}
 
 export default function Management() {
   const [messageApi, contextHolder] = message.useMessage();

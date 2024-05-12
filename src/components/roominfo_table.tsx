@@ -5,6 +5,7 @@
 import React from "react";
 import { Table, message, Tag } from "antd";
 import axios from "../services/axios";
+import { tzconversion, getDateHourAmPm } from "@/utils/helper";
 
 const bookingHistoryColumns = [
   { title: "房间号", dataIndex: "room_id", key: "room_id" },
@@ -55,10 +56,7 @@ export default function RoomInfoTable(props: any) {
       try {
         const data = {
           room_number: props.roomNumber,
-          // Todays date in YYYY-MM-DD format
-          date: new Date().toISOString().split("T")[0],
-          // TODO Test date
-          //   date: "2024-05-09",
+          date: new Date().toISOString(),
         };
         const response = await axios.post(
           "/reservation/get_room_reservations",
@@ -69,9 +67,12 @@ export default function RoomInfoTable(props: any) {
           (booking: any, index: any) => ({
             room_id: props.roomNumber,
             seat_id: booking.seat_number,
-            time_of_booking: booking.request_time,
+            time_of_booking: tzconversion(booking.request_time),
             date_booked: booking.reservation_date,
-            hours_booked: booking.reservation_time,
+            // hours_booked: booking.reservation_time,
+            hours_booked: `${getDateHourAmPm(
+              tzconversion(booking.start_time)
+            )} - ${getDateHourAmPm(tzconversion(booking.end_time))}`,
             status: booking.state,
             student_id: booking.student_id,
             key: index,

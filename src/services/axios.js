@@ -55,8 +55,9 @@ instance.interceptors.request.use(
         const { data } = config;
         // convertDateFieldsToUTC(data);
         if (data && typeof data === 'object') {
-            console.log("[intercepters request data]", data);
+            // console.log("[intercepters request data before]", data);
             convertDateFieldsToUTC(data)
+            // console.log("[intercepters request data after]", data);
         }
 
         // Apply Token
