@@ -26,7 +26,7 @@ const bookingHistoryColumns = [
             color = "yellow";
           } else if (tag === "canceled") {
             color = "red";
-          } else if (tag === "noshow") {
+          } else if (tag === "purple") {
             color = "volcano";
           } else if (tag === "completed") {
             color = "green";

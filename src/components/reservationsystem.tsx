@@ -1,6 +1,4 @@
 import React from "react";
-// import moment from "moment";
-import moment from "moment-timezone";
 import dayjs from "dayjs";
 import {
   Table,
@@ -15,7 +13,6 @@ import {
 } from "antd";
 import axios from "../../src/services/axios";
 import type { SelectProps } from "antd";
-
 import { tzconversion, getDateHourAmPm } from "../utils/helper";
 
 const columns = [
@@ -36,7 +33,6 @@ const handleCancelBooking = async (record: any) => {
     const response = await axios.post(`/reservation/cancel_reservation`, data);
     if (response.status === 200) {
       message.success("取消预约成功", 2.5);
-      // Referesh the page
       window.location.reload();
     }
   } catch (error: any) {
@@ -48,6 +44,8 @@ const handleCancelBooking = async (record: any) => {
 
 const handleRebook = async (record: any) => {
   console.log("Rebook", record);
+  message.error("未实现这个功能");
+  return;
   try {
     const data = {
       date: record.date_booked,
@@ -80,7 +78,7 @@ const tTR = (record: any, time: any) => (
   </>
 );
 
-const bookingHistoryColumns = [
+const bookingHistoryColumns: any = [
   { title: "房间号", dataIndex: "room_id", key: "room_id" },
   { title: "位置号", dataIndex: "seat_id", key: "seat_id" },
   {
@@ -132,24 +130,27 @@ const bookingHistoryColumns = [
     dataIndex: "action",
     key: "action",
     render: (text: any, record: any) => (
-      // TODO 确认取消预约的操作
       <>
-        <Popconfirm
-          title="确认取消?"
-          onConfirm={() => handleCancelBooking(record)}
-        >
-          <Button type="primary" danger size="small">
-            取消
-          </Button>
-        </Popconfirm>
+        {record.status == "approved" ? (
+          <Popconfirm
+            title="确认取消?"
+            onConfirm={() => handleCancelBooking(record)}
+          >
+            <Button type="primary" danger size="small">
+              取消
+            </Button>
+          </Popconfirm>
+        ) : null}
         <div style={{ margin: "5px" }}></div>
-        <Button
-          type="primary"
-          onClick={() => handleRebook(record)}
-          size="small"
-        >
-          再约
-        </Button>
+        {record.status === "canceled" ? (
+          <Button
+            type="primary"
+            onClick={() => handleRebook(record)}
+            size="small"
+          >
+            再约
+          </Button>
+        ) : null}
       </>
     ),
   },
@@ -157,6 +158,12 @@ const bookingHistoryColumns = [
 
 const bookingAvailableColumns = [
   { title: "位置号", dataIndex: "seat_id", key: "seat_id" },
+  {
+    title: "6:00",
+    dataIndex: "6am",
+    key: "6am",
+    render: (t: any, r: any) => null,
+  },
   {
     title: "7:00",
     dataIndex: "7am",
@@ -261,10 +268,178 @@ const bookingAvailableColumns = [
   },
 ];
 
+const DynamicTable = ({ data, room_info }: any) => {
+  const initialBookingHours = [
+    { title: "位置号", dataIndex: "seat_id", key: "seat_id" },
+    {
+      title: "0:00",
+      dataIndex: "0am",
+      key: "0am",
+      render: (t: any, r: any) => tTR(r, "7am"),
+    },
+    {
+      title: "1:00",
+      dataIndex: "1am",
+      key: "1am",
+      render: (t: any, r: any) => tTR(r, "1am"),
+    },
+    {
+      title: "2:00",
+      dataIndex: "2am",
+      key: "2am",
+      render: (t: any, r: any) => tTR(r, "2am"),
+    },
+    {
+      title: "3:00",
+      dataIndex: "3am",
+      key: "3am",
+      render: (t: any, r: any) => tTR(r, "3am"),
+    },
+    {
+      title: "4:00",
+      dataIndex: "4am",
+      key: "4am",
+      render: (t: any, r: any) => tTR(r, "4am"),
+    },
+    {
+      title: "5:00",
+      dataIndex: "5am",
+      key: "5am",
+      render: (t: any, r: any) => tTR(r, "5am"),
+    },
+    {
+      title: "6:00",
+      dataIndex: "6am",
+      key: "6am",
+      render: (t: any, r: any) => tTR(r, "6am"),
+    },
+    {
+      title: "7:00",
+      dataIndex: "7am",
+      key: "7am",
+      render: (t: any, r: any) => tTR(r, "7am"),
+    },
+    {
+      title: "8:00",
+      dataIndex: "8am",
+      key: "8am",
+      render: (t: any, r: any) => tTR(r, "8am"),
+    },
+    {
+      title: "9:00",
+      dataIndex: "9am",
+      key: "9am",
+      render: (t: any, r: any) => tTR(r, "9am"),
+    },
+    {
+      title: "10:00",
+      dataIndex: "10am",
+      key: "10am",
+      render: (t: any, r: any) => tTR(r, "10am"),
+    },
+    {
+      title: "11:00",
+      dataIndex: "11am",
+      key: "11am",
+      render: (t: any, r: any) => tTR(r, "11am"),
+    },
+    {
+      title: "12:00",
+      dataIndex: "12am",
+      key: "12am",
+      render: (t: any, r: any) => tTR(r, "12am"),
+    },
+    {
+      title: "13:00",
+      dataIndex: "13pm",
+      key: "13pm",
+      render: (t: any, r: any) => tTR(r, "13pm"),
+    },
+    {
+      title: "14:00",
+      dataIndex: "14pm",
+      key: "14pm",
+      render: (t: any, r: any) => tTR(r, "14pm"),
+    },
+    {
+      title: "15:00",
+      dataIndex: "15pm",
+      key: "15pm",
+      render: (t: any, r: any) => tTR(r, "15pm"),
+    },
+    {
+      title: "16:00",
+      dataIndex: "16pm",
+      key: "16pm",
+      render: (t: any, r: any) => tTR(r, "16pm"),
+    },
+    {
+      title: "17:00",
+      dataIndex: "17pm",
+      key: "17pm",
+      render: (t: any, r: any) => tTR(r, "17pm"),
+    },
+    {
+      title: "18:00",
+      dataIndex: "18pm",
+      key: "18pm",
+      render: (t: any, r: any) => tTR(r, "18pm"),
+    },
+    {
+      title: "19:00",
+      dataIndex: "19pm",
+      key: "19pm",
+      render: (t: any, r: any) => tTR(r, "19pm"),
+    },
+    {
+      title: "20:00",
+      dataIndex: "20pm",
+      key: "20pm",
+      render: (t: any, r: any) => tTR(r, "20pm"),
+    },
+    {
+      title: "21:00",
+      dataIndex: "21pm",
+      key: "21pm",
+      render: (t: any, r: any) => tTR(r, "21pm"),
+    },
+    {
+      title: "22:00",
+      dataIndex: "22pm",
+      key: "22pm",
+      render: (t: any, r: any) => tTR(r, "22pm"),
+    },
+    {
+      title: "23:00",
+      dataIndex: "23pm",
+      key: "23pm",
+      render: (t: any, r: any) => tTR(r, "23pm"),
+    },
+  ];
+  // If room not yet selected, return empty table
+  if (room_info === undefined) return <Table />;
+
+  console.log("reload");
+
+  // TODO Also dont show times are already passed
+
+  const start_time = room_info.start_time;
+  const end_time = room_info.end_time;
+  // Don't include hour cols before start_time and after end_time
+  const showCols = initialBookingHours.filter((col) => {
+    if (col.title === "位置号") return true;
+    const hour = parseInt(col.title.split(":")[0]);
+    return hour >= start_time && hour < end_time;
+  });
+
+  return <Table dataSource={data} columns={showCols} scroll={{ x: 1000 }} />;
+};
+
 export default function PersonalSystem() {
   const [messageApi, contextHolder] = message.useMessage();
   const [rooms, setRooms] = React.useState([]); // 设置rooms的状态
   const [selectedRoomId, setSelectedRoomId] = React.useState("");
+  const [selectedRoom, setSelectedRoom] = React.useState({}); // 设置selectedRoom的状态
   const [roomSeats, setRoomSeats] = React.useState([]);
   const [selectedDate, setSelectedDate] = React.useState(dayjs());
   const [selectedSeatId, setSelectedSeatId] = React.useState("");
@@ -303,7 +478,6 @@ export default function PersonalSystem() {
       try {
         const response = await axios.get("/users/get_student_requests");
         // console.log("Booking history", response.data);
-        // response.data["start_time"] is UTC, convert to Shanghai time
         console.log("fetchBookingHistory", response.data);
         const bookingHistoryMap = response.data.map(
           (item: any, index: number) => ({
@@ -311,12 +485,7 @@ export default function PersonalSystem() {
             room_id: item.room_number,
             seat_id: item.seat_number,
             date_booked: `${getDateHourAmPm(tzconversion(item.start_time))}`,
-            // time_of_booking: item.request_time
-            // time_of_booking: new Date(item.request_time).toString(),
-            // time_of_booking: convertUTCToShanghai(item.request_time),
             time_of_booking: tzconversion(item.request_time),
-            // hours_booked: item.reservation_time,
-            // hours_booked: item.start_time + " - " + item.end_time,
             hours_booked: `${getDateHourAmPm(
               tzconversion(item.start_time)
             )} - ${getDateHourAmPm(tzconversion(item.end_time))}`,
@@ -336,7 +505,10 @@ export default function PersonalSystem() {
   }, []);
 
   const handleRoomSelect = (roomId: string) => {
+    console.log("handleRoomSelect", roomId);
     setSelectedRoomId(roomId);
+    var selected_room: any = rooms.find((room: any) => room.room_id === roomId);
+    setSelectedRoom(selected_room);
   };
 
   const handleSeatSelect = (seatId: string) => {
@@ -349,12 +521,19 @@ export default function PersonalSystem() {
 
     for (let key in seatHours) {
       // { "7am": 0, "8am": 0, ... } Translate to options
+
       var time = 0;
       if (key.includes("pm")) time = parseInt(key.split("pm")[0]);
       else if (key.includes("am")) time = parseInt(key.split("am")[0]);
       else continue;
 
       if (seatHours[key] !== 0) continue; // Skip if not available
+
+      // Skip if not within the range of room hours
+      if (selectedRoom) {
+        if (time < selectedRoom.start_time || time > selectedRoom.end_time)
+          continue;
+      }
 
       availableSeatHours.push({
         label: key,
@@ -404,10 +583,16 @@ export default function PersonalSystem() {
       console.log("Reduced", roomSeatsData);
 
       // Map the data to table columns
-      // TODO Don't hardcode the hours
       const roomSeatsDataMapped = roomSeatsData.map(
         (seat: any, index: any) => ({
           seat_id: index,
+          "0am": seat[0],
+          "1am": seat[1],
+          "2am": seat[2],
+          "3am": seat[3],
+          "4am": seat[4],
+          "5am": seat[5],
+          "6am": seat[6],
           "7am": seat[7],
           "8am": seat[8],
           "9am": seat[9],
@@ -464,36 +649,36 @@ export default function PersonalSystem() {
     };
     console.log(data);
     try {
-      // Booking at /rooms/:roomId/seats/:seatId/book'
       const response = await axios.post(
         `/reservation/submit_reservation`,
         data
       );
       if (response.status === 200) {
         messageApi.success("预约成功！", 2.5);
+        window.location.reload();
       }
     } catch (error: any) {
       if (error.response) var error_response = error.response.data.error;
       messageApi.error(error_response, 2.5);
       console.error("onFinish error:", error.code, error_response);
     }
-
-    // Reload the page
-    window.location.reload();
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
 
+  const onClickReservationReset = () => {
+    setRoomSeats([]);
+  };
   return (
     <main style={{ width: "100%" }}>
       {contextHolder}
-      <p>TODO: 房间信息 </p>
+      <p>房间信息 </p>
       <Table dataSource={rooms} columns={columns} />
-      <p>TODO: 我的预约历史表格</p>
+      <p>我的预约历史表格</p>
       <Table dataSource={bookingHistory} columns={bookingHistoryColumns} />
-      <p>TODO: 预约表格</p>
+      <p>预约表格</p>
       <Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
         <Form.Item label="预约间号" name="room">
           <Select
@@ -503,20 +688,29 @@ export default function PersonalSystem() {
           >
             {rooms.map((room: any) => (
               <Select.Option key={room.room_id} value={room.room_id}>
-                {room.room_name}
+                房间: {room.room_name}, 可预约时间: {room.start_time} -{" "}
+                {room.end_time}
               </Select.Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item label="预约日期" name="date">
-          <DatePicker value={selectedDate} onChange={handleDateSelect} />
+          <DatePicker
+            value={selectedDate}
+            onChange={handleDateSelect}
+            disabledDate={(current) => {
+              // Disable dates before today(not including today)
+              return current < dayjs().subtract(1, "day");
+            }}
+          />
         </Form.Item>
         <p>可预约表格</p>
-        <Table
+        {/* <Table
           columns={bookingAvailableColumns}
           dataSource={roomSeats}
           scroll={{ x: 1500 }}
-        />
+        /> */}
+        <DynamicTable data={roomSeats} room_info={selectedRoom} />
 
         <Form.Item label="选择位置" name="seat">
           <Select
@@ -546,7 +740,11 @@ export default function PersonalSystem() {
           <Button type="primary" htmlType="submit">
             提交
           </Button>
-          <Button type="default" htmlType="reset">
+          <Button
+            type="default"
+            htmlType="reset"
+            onClick={onClickReservationReset}
+          >
             清空
           </Button>
         </Form.Item>

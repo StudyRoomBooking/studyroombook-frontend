@@ -17,7 +17,7 @@ export default function Register() {
       console.log("Logging in...", response);
       if (response.status === 200) {
         messageApi.success("注册成功！", 2.5);
-        window.location.href = "/home";
+        window.location.href = "/login";
       }
     } catch (error: any) {
       var error_response = error.response.data.error;

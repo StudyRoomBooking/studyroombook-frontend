@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Input, Space, message, QRCode, Form } from "antd";
 import axios from "../services/axios";
 import RoomInfoTable from "./roominfo_table";
+import Clock from "./clock";
 import { tzconversion } from "@/utils/helper";
 
 export default function Kiosk() {
@@ -76,10 +77,10 @@ export default function Kiosk() {
           "签到时间：" +
           reservationTime +
           "\n" +
-          "签到窗口：" +
+          "签到时间窗口：" +
           checkinWindow +
           "\n" +
-          "请在签到窗口内完成签到。";
+          "结果：成功签到。";
         setCheckInMessage(message);
         messageApi.success(username + "学生签到成功！", 2.5);
       }
@@ -110,8 +111,9 @@ export default function Kiosk() {
           "签到时间：" +
           reservationTime +
           "\n" +
-          "签到窗口：" +
-          checkinWindow;
+          "签到时间窗口：" +
+          checkinWindow +
+          "\n结果：";
         if (errorMessage == 1) {
           message = message + "\n" + "不在窗口内签到。";
           errorMessage = "不在窗口内签到";
@@ -139,8 +141,10 @@ export default function Kiosk() {
 
   return (
     <main>
-      {contextHolder} <p>TODO: 修改Kiosk页面</p>
-      <p> 今天的日期 ISO {new Date().toISOString()}</p>
+      {contextHolder} <p> Kiosk页面</p>
+      <div className="flex mb-4">
+        今天的日期 <Clock />
+      </div>
       <Space.Compact style={{ width: "100%" }}>
         <Input
           defaultValue={roomNumber}

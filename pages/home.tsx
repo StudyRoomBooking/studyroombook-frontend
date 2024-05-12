@@ -35,9 +35,9 @@ import OtherContent from "../src/components/other";
 import Kiosk from "../src/components/kiosk";
 import Analytics from "../src/components/analytics";
 import Management from "../src/components/management";
+import Clock from "@/components/clock";
 
 import axios from "../src/services/axios";
-import { tzconversion } from "@/utils/helper";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -118,7 +118,10 @@ export default function Home() {
         console.error("getUserInfo error:", error.code, error_response);
       }
     };
+
     getUserInfo();
+
+    // return () => clearInterval(intervalID);
   }, []);
 
   // Adjusted onMenuClick to set selected key
@@ -234,7 +237,7 @@ export default function Home() {
           <Footer style={{ textAlign: "center" }}>
             StudyRoomBooking ©{new Date().getFullYear()} Created by Team 30{" "}
             <br />
-            {timeZone} {timeZoneTime}
+            <Clock />
           </Footer>
         </Layout>
       </Layout>
