@@ -14,9 +14,7 @@ npm install
 ```
 
 ## 运行 Running
-
 首先，运行开发server
-
 ```bash
 npm run dev
 ```
@@ -31,11 +29,11 @@ pages/            # 页面
 src/
     app/
     components/    #组件
+    services/
+    utils/
 tests/             #测试
 ```
 
+## 功能 Features 
 
-## 编程
-
-## 功能 Features
 
