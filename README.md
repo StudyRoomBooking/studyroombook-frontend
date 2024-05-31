@@ -1,19 +1,19 @@
 # Study Room Booking Frontend
 
-Hello from branch 2
+本项目是一个自习室预约平台. This project is the frontend for a study room reservation platform.
 
-## 配置环境
-使用nvm配置node
-```
+## 配置环境 Environment Setup
+下载并安装[nvm]()，使用nvm配置node版本。
+```shell
 nvm use
 ```
 
-下载packages
-```
+然后下载packages
+```shell
 npm install
 ```
 
-## Running
+## 运行 Running
 
 首先，运行开发server
 
@@ -35,9 +35,7 @@ tests/             #测试
 ```
 
 
-## 其他
+## 编程
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 功能 Features
 

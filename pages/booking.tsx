@@ -4,7 +4,7 @@
  *
  */
 
-import { useState } from "react";
+import { useState } from 'react'
 
 export default function Booking() {
   return (
@@ -12,5 +12,5 @@ export default function Booking() {
       <h1>Booking</h1>
       <p> 欢迎来到Study Booking </p>
     </div>
-  );
+  )
 }
