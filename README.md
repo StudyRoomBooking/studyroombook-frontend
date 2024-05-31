@@ -1,5 +1,10 @@
 # Study Room Booking Frontend
 
+[![CI status][ci-badge]][ci-workflow]
+
+[ci-badge]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/main.yml/badge.svg
+[ci-workflow]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/main.yml
+
 本项目是一个自习室预约平台. This project is the frontend for a study room reservation platform.
 
 ## 配置环境 Environment Setup
