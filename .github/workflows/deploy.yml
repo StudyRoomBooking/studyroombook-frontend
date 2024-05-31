@@ -3,7 +3,8 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main, workflows # or your target branch
+      - main
+      - workflows # or your target branch
 
 jobs:
   deploy:
