@@ -1,0 +1,45 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main # or your target branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ cat .nvmrc }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_PATH: ${{ secrets.SERVER_PATH }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          rsync -avz -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" \
+            --exclude node_modules --exclude .git \
+            ./ $SERVER_USER@$SERVER_IP:$SERVER_PATH
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
+            cd $SERVER_PATH
+            npm install --production
+            pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- start
+            pm2 save
+          EOF
+          rm private_key.pem

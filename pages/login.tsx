@@ -1,28 +1,28 @@
-import React from "react";
-import { Form, Input, Button, message } from "antd";
-import axios from "../src/services/axios";
+import React from 'react'
+import { Form, Input, Button, message } from 'antd'
+import axios from '../src/services/axios'
 
 export default function Login() {
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, contextHolder] = message.useMessage()
 
   const onFinish = async (values: any) => {
     // Make a POST request to the server
     const data = {
       username: values.username,
       password: values.password,
-    };
+    }
     try {
-      const response = await axios.post("/auth/login", data);
-      console.log("Logging in...", response);
+      const response = await axios.post('/auth/login', data)
+      console.log('Logging in...', response)
       if (response.status === 200) {
-        messageApi.success("登记成功！", 2.5);
-        localStorage.setItem("authToken", response.data.authToken);
-        window.location.href = "/home";
+        messageApi.success('登记成功！', 2.5)
+        localStorage.setItem('authToken', response.data.authToken)
+        window.location.href = '/home'
       }
     } catch (error: any) {
-      var error_response = error.response.data.error;
-      messageApi.error(error_response, 2.5);
-      console.log(error.code, error.message);
+      var error_response = error.response.data.error
+      messageApi.error(error_response, 2.5)
+      console.log(error.code, error.message)
     }
 
     // 对 values 进行判断，并根据条件执行不同的逻辑
@@ -61,38 +61,34 @@ export default function Login() {
     //   } else {
     //     messageApi.error("用户名或密码错误，请重新输入！", 2.5);
     //   }
-  };
+  }
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
+    console.log('Failed:', errorInfo)
+  }
 
   return (
     <main
       className="flex items-center justify-center"
-      style={{ height: "100vh", width: "100vw", backgroundColor: "#CBFCDF" }}
+      style={{ height: '100vh', width: '100vw', backgroundColor: '#CBFCDF' }}
     >
-      {contextHolder}{" "}
-      {/* Render message context holder at the top of your component tree */}
+      {contextHolder} {/* Render message context holder at the top of your component tree */}
       <div
         style={{
-          width: "90vw",
-          height: "90vh",
-          display: "flex",
-          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-          borderRadius: "12px",
-          overflow: "hidden",
-          backgroundColor: "white",
+          width: '90vw',
+          height: '90vh',
+          display: 'flex',
+          boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          backgroundColor: 'white',
         }}
       >
-        <div style={{ width: "50%" }}>
-          <h2
-            className="text-black text-5xl"
-            style={{ marginLeft: "80px", paddingTop: "35%" }}
-          >
+        <div style={{ width: '50%' }}>
+          <h2 className="text-black text-5xl" style={{ marginLeft: '80px', paddingTop: '35%' }}>
             Login
           </h2>
-          <p className="text-black text-1xl" style={{ marginLeft: "80px" }}>
+          <p className="text-black text-1xl" style={{ marginLeft: '80px' }}>
             欢迎来StudyRoomBooking
           </p>
           <Form
@@ -102,21 +98,13 @@ export default function Login() {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
             layout="vertical"
-            style={{ marginInline: "80px", paddingTop: "20px" }}
+            style={{ marginInline: '80px', paddingTop: '20px' }}
           >
-            <Form.Item
-              label="用户"
-              name="username"
-              rules={[{ required: true, message: "请输入你的用户名!" }]}
-            >
+            <Form.Item label="用户" name="username" rules={[{ required: true, message: '请输入你的用户名!' }]}>
               <Input />
             </Form.Item>
 
-            <Form.Item
-              label="密码"
-              name="password"
-              rules={[{ required: true, message: "请输入你的密码！" }]}
-            >
+            <Form.Item label="密码" name="password" rules={[{ required: true, message: '请输入你的密码！' }]}>
               <Input.Password />
             </Form.Item>
 
@@ -125,13 +113,13 @@ export default function Login() {
                 type="primary"
                 htmlType="submit"
                 onClick={() => {
-                  console.log("Login button clicked");
+                  console.log('Login button clicked')
                 }}
                 style={{
-                  width: "100%",
-                  backgroundColor: "#12B987",
-                  height: "50px",
-                  marginTop: "50px",
+                  width: '100%',
+                  backgroundColor: '#12B987',
+                  height: '50px',
+                  marginTop: '50px',
                 }}
               >
                 登录
@@ -141,10 +129,10 @@ export default function Login() {
             <Form.Item>
               <Button
                 type="primary"
-                style={{ width: "100%", height: "50px", marginTop: "0px" }}
+                style={{ width: '100%', height: '50px', marginTop: '0px' }}
                 onClick={() => {
-                  console.log("Register button clicked");
-                  window.location.href = "/register";
+                  console.log('Register button clicked')
+                  window.location.href = '/register'
                 }}
               >
                 注册
@@ -153,10 +141,8 @@ export default function Login() {
           </Form>
         </div>
 
-        <div style={{ width: "50%", backgroundColor: "#D6FFF2" }}>
-          {/* Image Placeholder */}
-        </div>
+        <div style={{ width: '50%', backgroundColor: '#D6FFF2' }}>{/* Image Placeholder */}</div>
       </div>
     </main>
-  );
+  )
 }
