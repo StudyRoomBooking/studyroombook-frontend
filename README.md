@@ -2,8 +2,8 @@
 
 [![CI status][ci-badge]][ci-workflow]
 
-[ci-badge]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/main.yml/badge.svg
-[ci-workflow]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/main.yml
+[ci-badge]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/deploy.yml/badge.svg
+[ci-workflow]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/deploy.yml
 
 本项目是一个自习室预约平台. This project is the frontend for a study room reservation platform.
 
@@ -33,9 +33,10 @@ pages/            # 页面
     about.tsx
 src/
     app/
-    components/    #组件
+    components/    #可重复使用的组件
     services/
     utils/
+public/            #静态文件
 tests/             #测试
 ```
 
