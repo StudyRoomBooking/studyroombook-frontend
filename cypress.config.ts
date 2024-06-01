@@ -19,5 +19,7 @@ export default defineConfig({
       bundler: "webpack",
     },
     // Save component tests in the "cypress/component" folder 
+    // testFiles: '**/*.{js,jsx,ts,tsx}', // Adjust the file extensions as needed
+    specPattern: 'cypress/component-tests/**/*.cy.{js,jsx,ts,tsx}', // Adjust the pattern to match your directory structure and file naming
   },
 });
