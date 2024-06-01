@@ -43,6 +43,9 @@ jobs:
             pm2=$(which pm2)
             npm=$(which npm)
             node=$(which node)
+            echo "pm2: $pm2"
+            echo "npm: $npm"
+            echo "node: $node"
             $npm install --production
             $pm2 restart studyroom-frontend || $pm2 start $npm  --name "studyroom-frontend" -- start
             $pm2 save
