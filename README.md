@@ -1,4 +1,9 @@
-# Study Room Booking Frontend
+
+<p align="center">
+  <img src="./public/studyroombook_logo_resized.png" height="256">
+  <h1 align="center">Study Room Booking</h1>
+  <h4 align="center"> Frontend Platform</h4>
+<p align="center"> 
 
 [![CI status][ci-badge]][ci-workflow]
 
