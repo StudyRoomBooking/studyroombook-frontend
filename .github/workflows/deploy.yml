@@ -48,10 +48,10 @@ jobs:
             echo "npm: $npm"
             echo "node: $node"
             echo "path: $PWD"
+            echo "server path: $SERVER_PATH"
             $npm install --omit=dev
             $pm2 restart studyroom-frontend || $pm2 start $npm  --name "studyroom-frontend" -- start
             $pm2 save
-            $pm2 status studyroom-frontend | grep -q "online" || exit 1
-              
+            $pm2 status studyroom-frontend | grep -q "online" || exit 1    
           EOF
           rm private_key.pem
