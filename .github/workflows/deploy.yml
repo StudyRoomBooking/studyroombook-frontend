@@ -38,9 +38,10 @@ jobs:
             --exclude node_modules --exclude .git \
             ./ $SERVER_USER@$SERVER_IP:$SERVER_PATH
           ssh -i private_key.pem -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
+            source ~/.bashrc
             cd $SERVER_PATH
-            /root/.nvm/versions/node/v20.14.0/bin/npm install --production
-            /root/.nvm/versions/node/v20.14.0/bin/pm2 restart nextjs-app || /root/.nvm/versions/node/v20.14.0/bin/pm2 start /root/.nvm/versions/node/v20.14.0/bin/npm  --name "nextjs-app" -- start
-            /root/.nvm/versions/node/v20.14.0/bin/pm2 save
+            npm install --production
+            pm2 restart studyroom-frontend || pm2 start npm  --name "studyroom-frontend" -- start
+            pm2 save
           EOF
           rm private_key.pem
