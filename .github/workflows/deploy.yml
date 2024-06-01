@@ -40,7 +40,7 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
             cd $SERVER_PATH
             /root/.nvm/versions/node/v20.14.0/bin/npm install --production
-            /root/.nvm/versions/node/v20.14.0/bin/pm2 restart nextjs-app || /root/.nvm/versions/node/v20.14.0/bin/pm2 start npm --name "nextjs-app" -- start
+            /root/.nvm/versions/node/v20.14.0/bin/pm2 restart nextjs-app || /root/.nvm/versions/node/v20.14.0/bin/pm2 start /root/.nvm/versions/node/v20.14.0/bin/npm  --name "nextjs-app" -- start
             /root/.nvm/versions/node/v20.14.0/bin/pm2 save
           EOF
           rm private_key.pem
