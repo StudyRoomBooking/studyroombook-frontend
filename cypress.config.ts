@@ -8,8 +8,7 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
-
-      // Set viewport size
+      require('@cypress/code-coverage/task')(on, config)
     },
   },
 
