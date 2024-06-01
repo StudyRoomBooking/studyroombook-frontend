@@ -10,7 +10,7 @@
 [ci-badge]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/deploy.yml/badge.svg
 [ci-workflow]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/deploy.yml
 
-本项目是一个自习室预约平台. This project is the frontend for a study room reservation platform.
+本项目是一个自习室预约平台. 后端可以在[这里]()访问 This project is the frontend for a study room reservation platform.
 
 ## 配置环境 Environment Setup
 下载并安装[nvm]()，使用nvm配置node版本。
