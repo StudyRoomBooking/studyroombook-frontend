@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   cypress: cypress-io/cypress@3 # use s.x.y version to lock version
+  codecov: codecov/codecov@4.0.1
 
 # Executors are the environments in which the jobs run
 executors:
@@ -15,9 +16,18 @@ commands:
     steps:
       - store_artifacts:
           path: coverage
-      - run: npm run coverage-report
+      - run: npm run coverage-report-text
+      - codecov/upload:
+          file: ./coverage/coverage-final.json
+  setup_linux:
+    steps:
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get install -y curl gpg
+
   setup_project_and_cypress:
     steps:
+      - setup_linux
       - cypress/install:
           package-manager: npm
       - run:

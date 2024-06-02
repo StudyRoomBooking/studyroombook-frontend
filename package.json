@@ -14,7 +14,8 @@
     "start:instrumented": "next start",
     "cypress-run-e2e": "npx cypress run --e2e --spec \"cypress/e2e/**/*.cy.ts,!cypress/e2e/examples/**\" --headless",
     "cypress-run-component": "npx cypress run --component --headless",
-    "coverage-report": "npx nyc report --reporter=html"
+    "coverage-report": "npx nyc report --reporter=html",
+    "coverage-report-text": "npx nyc report --reporter=text"
   },
   "dependencies": {
     "@yudiel/react-qr-scanner": "^2.0.0-beta.3",
