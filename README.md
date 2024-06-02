@@ -13,7 +13,7 @@
 本项目是一个自习室预约平台. 后端可以在[这里]()访问 This project is the frontend for a study room reservation platform. The backend for this project can be found [here]().
 
 ## 配置环境 Environment Setup
-下载并安装[nvm]()，使用nvm配置node版本。
+下载并安装[nvm](https://github.com/nvm-sh/nvm)，使用nvm配置node版本。
 ```shell
 nvm use
 ```
@@ -43,6 +43,12 @@ src/
     utils/
 public/            #静态文件
 tests/             #测试
+```
+
+## 测试和代码覆盖率
+测试
+```sh
+npx cypress open
 ```
 
 ## 功能 Features 
