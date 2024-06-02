@@ -61,7 +61,7 @@ npm run cypress-run-e2e
 npm run coverage-report
 ```
 
-我们使用[circleci]来
+我们使用[circleci]来在每一个push事件跑自动测试，然后把报告上传到[code cov](). 比如
 
 
 circleci本地检查config是否合格

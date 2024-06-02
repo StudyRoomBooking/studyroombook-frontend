@@ -64,7 +64,7 @@ export default function Login() {
             style={{ marginInline: '80px', paddingTop: '20px' }}
           >
             <Form.Item label="用户" name="username" rules={[{ required: true, message: '请输入你的用户名!' }]}>
-              <Input name="username" />
+              <Input name="username_test" />
             </Form.Item>
 
             <Form.Item label="密码" name="password" rules={[{ required: true, message: '请输入你的密码！' }]}>
