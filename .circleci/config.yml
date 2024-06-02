@@ -19,8 +19,15 @@ commands:
       - run: npm run coverage-report-text
       - codecov/upload:
           file: ./coverage/coverage-final.json
+  setup_linux:
+    steps:
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get install -y curl
+
   setup_project_and_cypress:
     steps:
+      - setup_linux
       - cypress/install:
           package-manager: npm
       - run:
