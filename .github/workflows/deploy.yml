@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      # - workflows # or your target branch
+      - workflows # or your target branch
 
 jobs:
   deploy:
@@ -52,7 +52,7 @@ jobs:
             echo "node: $node"
             echo "path: $pwd"
             $npm install --omit=dev
-            $pm2 restart studyroom-frontend || $pm2 start $npm  --name "studyroom-frontend" -- start
+            $pm2 restart studyroom-frontend || $pm2 start $npm  --name "studyroom-frontend" -- start -p 4000
             $pm2 save
             $pm2 status studyroom-frontend | grep -q "online" || exit 1    
           EOF
