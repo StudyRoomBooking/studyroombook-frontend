@@ -33,7 +33,7 @@ commands:
       #     name: Run Cypress e2e tests
       #     command: npm run cypress-run-e2e
       - cypress/run-tests:
-          start-command: npm start
+          start-command: npm run dev:instrumented
           cypress-command: npm run cypress-run-e2e
 
       - report-coverage
