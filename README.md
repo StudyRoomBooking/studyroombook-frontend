@@ -47,7 +47,7 @@ tests/             #测试
 ```
 
 ## 测试和代码覆盖率
-测试
+本项目使用[cypress]来做end-to-end和component测试
 ```sh
 npm run predev:instrument-clean
 npm run dev:instrumented
@@ -61,7 +61,10 @@ npm run cypress-run-e2e
 npm run coverage-report
 ```
 
-CI/CD
+我们使用[circleci]来
+
+
+circleci本地检查config是否合格
 ```sh
 circleci config validate .circleci/config.yml # validate config
 circleci config process .circleci/config.yml > process.yml # create local
