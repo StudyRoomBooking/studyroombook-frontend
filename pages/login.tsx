@@ -20,9 +20,9 @@ export default function Login() {
         window.location.href = '/home'
       }
     } catch (error: any) {
-      var error_response = error.response.data.error
-      messageApi.error(error_response, 2.5)
-      console.log(error.code, error.message)
+      if (error.response) var error_response = error.response.data.error
+      messageApi.error('登记失败', 2.5)
+      console.log(error.code, error_response)
     }
 
     // 对 values 进行判断，并根据条件执行不同的逻辑
@@ -101,16 +101,17 @@ export default function Login() {
             style={{ marginInline: '80px', paddingTop: '20px' }}
           >
             <Form.Item label="用户" name="username" rules={[{ required: true, message: '请输入你的用户名!' }]}>
-              <Input />
+              <Input name="username" />
             </Form.Item>
 
             <Form.Item label="密码" name="password" rules={[{ required: true, message: '请输入你的密码！' }]}>
-              <Input.Password />
+              <Input.Password name="password" />
             </Form.Item>
 
             <Form.Item>
               <Button
                 type="primary"
+                name="login"
                 htmlType="submit"
                 onClick={() => {
                   console.log('Login button clicked')
@@ -129,6 +130,7 @@ export default function Login() {
             <Form.Item>
               <Button
                 type="primary"
+                name="register"
                 style={{ width: '100%', height: '50px', marginTop: '0px' }}
                 onClick={() => {
                   console.log('Register button clicked')

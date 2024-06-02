@@ -20,10 +20,10 @@ export default function Register() {
         window.location.href = '/login'
       }
     } catch (error: any) {
-      var error_response = error.response.data.error
-      messageApi.error(error_response, 2.5)
+      if (error.response) var error_response = error.response.data.error
+      messageApi.error('注册失败', 2.5)
       console.log(error)
-      console.log(error.code, error.message)
+      console.log(error.code, error_response)
     }
   }
 
@@ -49,7 +49,7 @@ export default function Register() {
         }}
       >
         <div style={{ width: '50%' }}>
-          <h2 className="text-black text-5xl" style={{ marginLeft: '80px', paddingTop: '40%' }}>
+          <h2 className="text-black text-5xl" style={{ marginLeft: '80px', paddingTop: '30%' }}>
             Register
           </h2>
           <p className="text-black text-1xl" style={{ marginLeft: '80px' }}>
@@ -65,20 +65,21 @@ export default function Register() {
             style={{ marginInline: '80px', paddingTop: '20px' }}
           >
             <Form.Item label="用户" name="username" rules={[{ required: true, message: '请输入你的用户名!' }]}>
-              <Input />
+              <Input name="username" />
             </Form.Item>
 
             <Form.Item label="密码" name="password" rules={[{ required: true, message: '请输入你的密码！' }]}>
-              <Input.Password />
+              <Input.Password name="password" />
             </Form.Item>
 
             <Form.Item label="邮箱" name="email" rules={[{ required: true, message: '请输入你的邮箱！' }]}>
-              <Input />
+              <Input name="email" />
             </Form.Item>
 
             <Form.Item>
               <Button
                 type="primary"
+                name="register"
                 htmlType="submit"
                 onClick={() => {}}
                 style={{

@@ -6,6 +6,7 @@ export default defineConfig({
 
 
   e2e: {
+    baseUrl: "http://localhost:3000",
     setupNodeEvents(on, config) {
       // implement node event listeners here
       require('@cypress/code-coverage/task')(on, config)
@@ -18,6 +19,12 @@ export default defineConfig({
     devServer: {
       framework: "next",
       bundler: "webpack",
+    },
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+      require('@cypress/code-coverage/task')(on, config)
+
+      return config
     },
     // Save component tests in the "cypress/component" folder 
     // testFiles: '**/*.{js,jsx,ts,tsx}', // Adjust the file extensions as needed
