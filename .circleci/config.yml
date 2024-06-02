@@ -1,25 +1,41 @@
 version: 2.1
 orbs:
   cypress: cypress-io/cypress@3 # use s.x.y version to lock version
-  node: circleci/node@5.0.0
 
-jobs:
-  # setup-node:
-  #   executor: node/default
-  #   steps:
-  #     - checkout
-  #     - node/install:
-  #         node-version: "20"
+# Executors are the environments in which the jobs run
+executors:
+  with-chrome-and-firefox:
+    docker:
+      - image: "cypress/browsers:node-20.12.0-chrome-123.0.6312.86-1-ff-124.0.2-edge-123.0.2420.65-1"
 
-  cypress-run:
-    executor: node/default
+# Commands are reusable steps that can be called by their name
+commands:
+  setup_project_and_cypress:
     steps:
-      - cypress/run:
-          start-command: "npm run start"
-          cypress-command: 'npx cypress run --e2e --spec "cypress/e2e/**/*.cy.ts,!cypress/e2e/examples/**" --headless'
+      - cypress/install:
+          package-manager: npm
+      - run:
+          name: Build project
+          command: npm run build
+      - run:
+          name: Print machine information
+          command: npm cypress info
+
+# Jobs are the individual tasks that can be run in parallel
+jobs:
+  setup_project_and_cypress_linux:
+    executor: with-chrome-and-firefox
+    steps:
+      - setup_project_and_cypress
+
+# Workflows are the sequences of jobs that are run in response to events
+linux-workflow: &linux-workflow
+  jobs:
+    # Setup project and Cypress on Linux
+    - setup_project_and_cypress_linux:
+        name: Setup project and Cypress on Linux
+    # Run Cypress component tests
 
 workflows:
-  build:
-    jobs:
-      # - setup-node
-      - cypress-run
+  linux:
+    <<: *linux-workflow

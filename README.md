@@ -61,6 +61,13 @@ npm run cypress-run-e2e
 npm run coverage-report
 ```
 
+CI/CD
+```sh
+circleci config validate .circleci/config.yml # validate config
+circleci config process .circleci/config.yml > process.yml # create local
+circleci local execute job1
+```
+
 ## 功能 Features 
 
 
