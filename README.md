@@ -65,11 +65,17 @@ npm run coverage-report
 
 
 
+
+
 circleci本地检查config是否合格
 ```sh
 circleci config validate .circleci/config.yml # validate config
 circleci config process .circleci/config.yml > process.yml # create local
 circleci local execute job1
+```
+本地检查codecov.yml是否合格
+```sh
+cat codecov.yml | curl --data-binary @- https://codecov.io/validate
 ```
 
 ## 功能 Features 
