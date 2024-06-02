@@ -10,16 +10,26 @@ executors:
 
 # Commands are reusable steps that can be called by their name
 commands:
+  report-coverage:
+    description: "Store coverage report as an artifact"
+    steps:
+      - store_artifacts:
+          path: coverage
+      - run: npm run coverage-report
   setup_project_and_cypress:
     steps:
       - cypress/install:
           package-manager: npm
       - run:
           name: Build project
-          command: npm run build
+          command: npm run build:instrumented
       - run:
           name: Print machine information
-          command: npm cypress info
+          command: npx cypress info
+      - run:
+          name: Run Cypress tests
+          command: npm run cypress-run-component
+      - report-coverage
 
 # Jobs are the individual tasks that can be run in parallel
 jobs:
