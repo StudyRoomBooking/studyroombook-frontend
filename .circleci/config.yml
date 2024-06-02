@@ -1,37 +1,58 @@
 version: 2.1
 orbs:
-  # "cypress-io/cypress@3" installs the latest published
-  # version "s.x.y" of the orb. We recommend you then use
-  # the strict explicit version "cypress-io/cypress@3.x.y"
-  # to lock the version and prevent unexpected CI changes
-  cypress: cypress-io/cypress@3
-  node: circleci/node@5.0.0
+  cypress: cypress-io/cypress@3 # use s.x.y version to lock version
 
+# Executors are the environments in which the jobs run
+executors:
+  with-chrome-and-firefox:
+    docker:
+      - image: "cypress/browsers:node-20.12.0-chrome-123.0.6312.86-1-ff-124.0.2-edge-123.0.2420.65-1"
+
+# Commands are reusable steps that can be called by their name
+commands:
+  report-coverage:
+    description: "Store coverage report as an artifact"
+    steps:
+      - store_artifacts:
+          path: coverage
+      - run: npm run coverage-report
+  setup_project_and_cypress:
+    steps:
+      - cypress/install:
+          package-manager: npm
+      - run:
+          name: Build project
+          command: npm run build:instrumented
+      - run:
+          name: Print machine information
+          command: npx cypress info
+      - run:
+          name: Run Cypress component tests
+          command: npm run cypress-run-component
+      # - run:
+      #     name: Run Cypress e2e tests
+      #     command: npm run cypress-run-e2e
+      - cypress/run-tests:
+          start-command: npm start
+          cypress-command: npm run cypress-run-e2e
+
+      - report-coverage
+
+# Jobs are the individual tasks that can be run in parallel
 jobs:
-  setup-node:
-    executor: node/default
+  setup_project_and_cypress_linux:
+    executor: with-chrome-and-firefox
     steps:
-      - checkout
-      - node/install:
-          node-version: "20"
+      - setup_project_and_cypress
 
-  cypress-run:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install:
-          node-version: "20"
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Run tests
-          command: npm test
-      - cypress/run:
-          start-command: "npm run start"
+# Workflows are the sequences of jobs that are run in response to events
+linux-workflow: &linux-workflow
+  jobs:
+    # Setup project and Cypress on Linux
+    - setup_project_and_cypress_linux:
+        name: Setup project and Cypress on Linux
+    # Run Cypress component tests
 
 workflows:
-  build:
-    jobs:
-      - setup-node
-      - cypress-run
+  linux:
+    <<: *linux-workflow

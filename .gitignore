@@ -4,6 +4,9 @@
 coverage
 .nyc_output
 
+# circleci
+process.yml
+
 # dependencies
 /node_modules
 /.pnp
