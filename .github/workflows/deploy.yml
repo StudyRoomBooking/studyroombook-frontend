@@ -38,7 +38,9 @@ jobs:
             --exclude node_modules --exclude .git \
             ./ $SERVER_USER@$SERVER_IP:$SERVER_PATH
           ssh -i private_key.pem -o SendEnv=$SERVER_PATH -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
+            export SERVER_PATH=$1
             cd "$SERVER_PATH"
+            echo "server path: $SERVER_PATH"
             source ~/.bashrc
             source ~/.nvm/nvm.sh
             pm2=$(which pm2)
