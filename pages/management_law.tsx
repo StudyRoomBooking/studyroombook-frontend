@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 export default function Management() {
   const [bookingStatus, setBookingStatus] = useState([])
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [selectedRoomNumber, setSelectedRoomNumber] = useState('')
+
+  const fetchBookingStatus = useCallback(async (date: any, roomNumber: any) => {
+    // 向后端请求特定日期和房间号的预约状态
+    const formattedDate = formatDate(date)
+    const response = await fetch(`http://127.0.0.1:8000/studyroomstate?date=${formattedDate}&roomnumber=${roomNumber}`)
+    const data = await response.json()
+    return data
+  }, [])
 
   useEffect(() => {
     // 在组件挂载时，请求初始日期的预约状态
@@ -14,15 +22,7 @@ export default function Management() {
       .catch((error) => {
         console.error('Error fetching booking status:', error)
       })
-  }, [selectedDate, selectedRoomNumber]) // 当selectedDate或selectedRoomNumber变化时，重新请求预约状态
-
-  const fetchBookingStatus = async (date: any, roomNumber: any) => {
-    // 向后端请求特定日期和房间号的预约状态
-    const formattedDate = formatDate(date)
-    const response = await fetch(`http://127.0.0.1:8000/studyroomstate?date=${formattedDate}&roomnumber=${roomNumber}`)
-    const data = await response.json()
-    return data
-  }
+  }, [selectedDate, selectedRoomNumber, fetchBookingStatus]) // 当selectedDate或selectedRoomNumber变化时，重新请求预约状态
 
   const formatDate = (date: any) => {
     const year = date.getFullYear()

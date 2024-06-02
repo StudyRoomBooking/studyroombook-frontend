@@ -5,6 +5,16 @@ import axios from '../../src/services/axios'
 import type { SelectProps } from 'antd'
 import { tzconversion, getDateHourAmPm } from '../utils/helper'
 
+interface Room {
+  start_time: string
+  end_time: string
+}
+
+const defaultRoom: Room = {
+  start_time: '',
+  end_time: '',
+}
+
 const columns = [
   { title: '房间号', dataIndex: 'room_id', key: 'room_id' },
   { title: '房间名字', dataIndex: 'room_name', key: 'room_name' },
@@ -416,7 +426,7 @@ export default function PersonalSystem() {
   const [messageApi, contextHolder] = message.useMessage()
   const [rooms, setRooms] = React.useState([]) // 设置rooms的状态
   const [selectedRoomId, setSelectedRoomId] = React.useState('')
-  const [selectedRoom, setSelectedRoom] = React.useState({}) // 设置selectedRoom的状态
+  const [selectedRoom, setSelectedRoom] = React.useState(defaultRoom) // 设置selectedRoom的状态
   const [roomSeats, setRoomSeats] = React.useState([])
   const [selectedDate, setSelectedDate] = React.useState(dayjs())
   const [selectedSeatId, setSelectedSeatId] = React.useState('')
@@ -500,14 +510,13 @@ export default function PersonalSystem() {
 
       // Skip if not within the range of room hours
       if (selectedRoom) {
-        if (time < selectedRoom.start_time || time > selectedRoom.end_time) continue
+        // if (time < selectedRoom.start_time || time > selectedRoom.end_time) continue
+        const startTime = parseInt(selectedRoom.start_time)
+        const endTime = parseInt(selectedRoom.end_time)
+        if (time < startTime || time > endTime) continue
       }
 
-      availableSeatHours.push({
-        label: key,
-        value: time,
-        key: time,
-      })
+      availableSeatHours.push({ label: key, value: time, key: time })
     }
 
     console.log('Seat hours', availableSeatHours)
@@ -591,7 +600,6 @@ export default function PersonalSystem() {
     const end_hour = values.times_selected[1]
     // use values.date as the date, add the hour
     const start_time = dayjs().date(values.date.date()).hour(start_hour).minute(0).second(0)
-
     const end_time = dayjs().date(values.date.date()).hour(end_hour).minute(0).second(0)
 
     console.log('onFinish', values.date, start_time, end_time)
