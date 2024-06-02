@@ -29,9 +29,13 @@ commands:
       - run:
           name: Run Cypress component tests
           command: npm run cypress-run-component
-      - run:
-          name: Run Cypress e2e tests
-          command: npm run cypress-run-e2e
+      # - run:
+      #     name: Run Cypress e2e tests
+      #     command: npm run cypress-run-e2e
+      - cypress/run-tests:
+          start-command: npm start
+          cypress-command: npm run cypress-run-e2e
+
       - report-coverage
 
 # Jobs are the individual tasks that can be run in parallel
