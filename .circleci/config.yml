@@ -27,8 +27,11 @@ commands:
           name: Print machine information
           command: npx cypress info
       - run:
-          name: Run Cypress tests
+          name: Run Cypress component tests
           command: npm run cypress-run-component
+      - run:
+          name: Run Cypress e2e tests
+          command: npm run cypress-run-e2e
       - report-coverage
 
 # Jobs are the individual tasks that can be run in parallel
