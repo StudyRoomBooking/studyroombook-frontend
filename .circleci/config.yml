@@ -1,37 +1,26 @@
 version: 2.1
 orbs:
-  # "cypress-io/cypress@3" installs the latest published
-  # version "s.x.y" of the orb. We recommend you then use
-  # the strict explicit version "cypress-io/cypress@3.x.y"
-  # to lock the version and prevent unexpected CI changes
-  cypress: cypress-io/cypress@3
+  cypress: cypress-io/cypress@3 # use s.x.y version to lock version
   node: circleci/node@5.0.0
 
 jobs:
-  setup-node:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install:
-          node-version: "20"
+  # setup-node:
+  #   executor: node/default
+  #   steps:
+  #     - checkout
+  #     - node/install:
+  #         node-version: "20"
 
   cypress-run:
     executor: node/default
     steps:
       - checkout
-      - node/install:
-          node-version: "20"
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Run tests
-          command: npm test
       - cypress/run:
           start-command: "npm run start"
+          cypress-command: "npx cypress run --browser chrome"
 
 workflows:
   build:
     jobs:
-      - setup-node
+      # - setup-node
       - cypress-run
