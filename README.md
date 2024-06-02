@@ -5,9 +5,8 @@
   <h4 align="center"> Frontend Platform</h4>
 <p align="center"> 
 
-Studyroombooking/studyroombook-frontend-ci
 
-[![CI status][ci-badge]][ci-workflow] [![CircleCI](https://circleci.com/gh/Studyroombooking/studyroombook-frontend-ci.svg?style=svg)](https://circleci.com/gh/Studyroombooking/studyroombook-frontend-ci)
+[![CI status][ci-badge]][ci-workflow] [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/7dpnncKR8JfqpAGWYihiTE/LKGqWG9ChBCoaPCagWYsHk/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/7dpnncKR8JfqpAGWYihiTE/LKGqWG9ChBCoaPCagWYsHk/tree/main)
 
 [ci-badge]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/deploy.yml/badge.svg
 [ci-workflow]: https://github.com/StudyRoomBooking/studyroombook-frontend/actions/workflows/deploy.yml
