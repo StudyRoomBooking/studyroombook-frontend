@@ -24,43 +24,6 @@ export default function Login() {
       messageApi.error('登记失败', 2.5)
       console.log(error.code, error_response)
     }
-
-    // 对 values 进行判断，并根据条件执行不同的逻辑
-    //   if (values.username.length === 3 && values.password === "123456") {
-    //     if (values.username[0] === "0") {
-    //       console.log("Success:", values);
-    //       messageApi.success("登录成功！", 2.5);
-    //       window.location.href = "/management_super";
-    //     } else if (values.username[0] === "1") {
-    //       console.log("Success:", values);
-    //       messageApi.success("登录成功！", 2.5);
-    //       window.location.href = "/management_public";
-    //     } else if (values.username[0] === "2") {
-    //       console.log("Success:", values);
-    //       messageApi.success("登录成功！", 2.5);
-    //       window.location.href = "/management_cs";
-    //     } else if (values.username[0] === "3") {
-    //       console.log("Success:", values);
-    //       messageApi.success("登录成功！", 2.5);
-    //       window.location.href = "/management_law";
-    //     } else {
-    //       messageApi.error("用户名或密码错误，请重新输入！", 2.5);
-    //     }
-    //   } else if (values.username.length === 6 && values.password === "123456") {
-    //     if (values.username[0] === "2") {
-    //       console.log("Success:", values);
-    //       messageApi.success("登录成功！", 2.5);
-    //       window.location.href = "/home_cs";
-    //     } else if (values.username[0] === "3") {
-    //       console.log("Success:", values);
-    //       messageApi.success("登录成功！", 2.5);
-    //       window.location.href = "/home_law";
-    //     } else {
-    //       messageApi.error("用户名或密码错误，请重新输入！", 2.5);
-    //     }
-    //   } else {
-    //     messageApi.error("用户名或密码错误，请重新输入！", 2.5);
-    //   }
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -89,7 +52,7 @@ export default function Login() {
             Login
           </h2>
           <p className="text-black text-1xl" style={{ marginLeft: '80px' }}>
-            欢迎来StudyRoomBooking
+            欢迎来自习室预约系统
           </p>
           <Form
             name="basic"
