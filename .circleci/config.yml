@@ -16,7 +16,7 @@ commands:
     steps:
       - store_artifacts:
           path: coverage
-      - run: npm run coverage-report
+      - run: npm run coverage-report-text
       - codecov/upload:
           file: ./coverage/coverage-final.json
   setup_project_and_cypress:
