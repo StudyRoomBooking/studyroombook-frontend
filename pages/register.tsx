@@ -96,6 +96,7 @@ export default function Register() {
             <Form.Item>
               <Button
                 type="primary"
+                name="login"
                 style={{ width: '100%', height: '50px', marginTop: '0px' }}
                 onClick={() => {
                   window.location.href = '/login'

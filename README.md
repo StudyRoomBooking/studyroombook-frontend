@@ -48,7 +48,16 @@ tests/             #测试
 ## 测试和代码覆盖率
 测试
 ```sh
+npm run predev:instrument-clean
+npm run dev:instrumented
+# 在不同terminal打开
 npx cypress open
+
+# 或者headless
+npm run cypress-run-e2e
+
+# 报告，然后可以在coverage/index.html访问
+npm run coverage-report
 ```
 
 ## 功能 Features 

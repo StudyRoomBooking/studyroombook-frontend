@@ -25,4 +25,10 @@ describe('template spec', () => {
     // Get register button with name "register" and click it
     cy.get('button[name=register]').click()
   })
+
+  // Go from register to login
+  it('login from register', () => {
+    cy.visit('/register')
+    cy.get('button[name=login]').click()
+  })
 })

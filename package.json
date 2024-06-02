@@ -8,8 +8,10 @@
     "start": "next start -p 4000",
     "test": "npx cypress open",
     "lint": "next lint",
-    "predev:instrument-clean": "rm -rf .nyc_output coverage",
+    "predev:instrument-clean": "rm -rf .nyc_output coverage .next",
     "dev:instrumented": "INSTRUMENT_CODE=1 next dev",
+    "cypress-run-e2e": "npx cypress run --e2e --spec \"cypress/e2e/**/*.cy.ts,!cypress/e2e/examples/**\" --headless",
+    "cypress-run-component": "npx cypress run --component --headless",
     "coverage-report": "npx nyc report --reporter=html"
   },
   "dependencies": {
