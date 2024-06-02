@@ -1,7 +1,8 @@
 version: 2.1
 orbs:
   cypress: cypress-io/cypress@3 # use s.x.y version to lock version
-  codecov: codecov/codecov@4.0.1
+  # codecov: codecov/codecov@4.0.1
+  codecov: codecov/codecov@1.2.3
 
 # Executors are the environments in which the jobs run
 executors:
@@ -18,7 +19,7 @@ commands:
           path: coverage
       - run: npm run coverage-report-text
       - codecov/upload:
-          file: ./coverage/coverage-final.json
+          file: coverage/coverage-final.json
   setup_linux:
     steps:
       - run:
