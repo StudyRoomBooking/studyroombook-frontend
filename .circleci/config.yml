@@ -14,10 +14,9 @@ jobs:
   cypress-run:
     executor: node/default
     steps:
-      - checkout
       - cypress/run:
           start-command: "npm run start"
-          cypress-command: "npx cypress run --browser chrome"
+          cypress-command: 'npx cypress run --e2e --spec "cypress/e2e/**/*.cy.ts,!cypress/e2e/examples/**" --headless'
 
 workflows:
   build:
