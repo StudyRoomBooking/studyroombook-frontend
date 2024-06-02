@@ -5,8 +5,33 @@ orbs:
   # the strict explicit version "cypress-io/cypress@3.x.y"
   # to lock the version and prevent unexpected CI changes
   cypress: cypress-io/cypress@3
+  node: circleci/node@5.0.0
+
+jobs:
+  setup-node:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install:
+          node-version: "20"
+
+  cypress-run:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install:
+          node-version: "20"
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Run tests
+          command: npm test
+      - cypress/run:
+          start-command: "npm run start"
+
 workflows:
   build:
     jobs:
-      - cypress/run: # "run" job comes from "cypress" orb
-          start-command: "npm run start"
+      - setup-node
+      - cypress-run

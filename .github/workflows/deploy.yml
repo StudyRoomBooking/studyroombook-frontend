@@ -32,25 +32,25 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
         run: |
+          echo "$SERVER_PATH"
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           rsync -avz -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" \
             --exclude node_modules --exclude .git \
             ./ $SERVER_USER@$SERVER_IP:$SERVER_PATH
-          ssh -i private_key.pem -o SendEnv=$SERVER_PATH -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
-            export SERVER_PATH=$SERVER_PATH
-            cd "$SERVER_PATH"
+          ssh -o SendEnv=SERVER_PATH -i private_key.pem -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
+            cd $SERVER_PATH
             echo "server path: $SERVER_PATH"
             source ~/.bashrc
             source ~/.nvm/nvm.sh
             pm2=$(which pm2)
             npm=$(which npm)
             node=$(which node)
+            pwd=$(pwd)
             echo "pm2: $pm2"
             echo "npm: $npm"
             echo "node: $node"
-            echo "path: $PWD"
-            echo "server path: $SERVER_PATH"
+            echo "path: $pwd"
             $npm install --omit=dev
             $pm2 restart studyroom-frontend || $pm2 start $npm  --name "studyroom-frontend" -- start
             $pm2 save
