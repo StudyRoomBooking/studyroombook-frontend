@@ -14,6 +14,7 @@ jobs:
       - checkout
       - node/install:
           node-version: "20"
+
   cypress-run:
     executor: node/default
     steps:
@@ -28,6 +29,7 @@ jobs:
           command: npm test
       - cypress/run:
           start-command: "npm run start"
+
 workflows:
   build:
     jobs:
