@@ -7,13 +7,10 @@ const headers = {
     // 'Access-Control-Allow-Origin': 'true',
     // 'Access-Control-Allow-Credentials': 'true',
     // 'Access-Control-Allow-Headers': '*'
-
 };
 
 // Create axios instance
 const instance = axios.create({
-    // baseURL: 'http://localhost:3000/api',
-    // baseURL: 'http://cloud.gutemorgan.com:9123/api', // 'http://localhost:8000/api
     baseURL: 'http://localhost:8000/api',
     timeout: 10000, // 1000ms
     headers: headers,

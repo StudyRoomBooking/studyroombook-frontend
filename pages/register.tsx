@@ -21,7 +21,7 @@ export default function Register() {
       }
     } catch (error: any) {
       if (error.response) var error_response = error.response.data.error
-      messageApi.error('注册失败', 2.5)
+      messageApi.error(error_response, 2.5)
       console.log(error)
       console.log(error.code, error_response)
     }
