@@ -11,7 +11,7 @@ const headers = {
 
 // Create axios instance
 const instance = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'http://0.0.0.0:8000/api',
     timeout: 10000, // 1000ms
     headers: headers,
     // withCredentials: true,
