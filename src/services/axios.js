@@ -9,9 +9,11 @@ const headers = {
     // 'Access-Control-Allow-Headers': '*'
 };
 
+console.log("AXIOS", process.env.NEXT_PUBLIC_API_BASE_URL);
+
 // Create axios instance
 const instance = axios.create({
-    baseURL: 'http://0.0.0.0:8000/api',
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
     timeout: 10000, // 1000ms
     headers: headers,
     // withCredentials: true,
