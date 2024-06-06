@@ -26,8 +26,8 @@ const bookingHistoryColumns = [
             color = 'yellow'
           } else if (tag === 'canceled') {
             color = 'red'
-          } else if (tag === 'purple') {
-            color = 'volcano'
+          } else if (tag === 'noshow') {
+            color = 'purple'
           } else if (tag === 'completed') {
             color = 'green'
           }
@@ -47,21 +47,27 @@ const bookingHistoryColumns = [
   },
 ]
 
-export default function RoomInfoTable(props: any) {
+interface RoomInfoTableProps {
+  roomNumber: Number // Adjust the type as per your requirement
+}
+
+const RoomInfoTable: React.FC<RoomInfoTableProps> = ({ roomNumber }) => {
+  // export default function RoomInfoTable(props: any) {
   const [messageApi, contextHolder] = message.useMessage()
   const [bookingHistory, setBookingHistory] = React.useState([])
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
     const getRoomInfo = async () => {
       try {
         const data = {
-          room_number: props.roomNumber,
+          room_number: roomNumber,
           date: new Date().toISOString(),
         }
         const response = await axios.post('/reservation/get_room_reservations', data)
         console.log('Room information:', response)
         const bookingHistoryMap = response.data.map((booking: any, index: any) => ({
-          room_id: props.roomNumber,
+          room_id: roomNumber,
           seat_id: booking.seat_number,
           time_of_booking: tzconversion(booking.request_time),
           date_booked: booking.reservation_date,
@@ -89,7 +95,7 @@ export default function RoomInfoTable(props: any) {
       getRoomInfo()
     }, 60000)
     return () => clearInterval(interval)
-  }, [props.roomNumber, messageApi, contextHolder, setBookingHistory, messageApi.error])
+  }, [])
 
   return (
     <main>
@@ -98,3 +104,9 @@ export default function RoomInfoTable(props: any) {
     </main>
   )
 }
+
+// export default RoomInfoTable
+const MemoizedRoomInfoTable = React.memo(RoomInfoTable)
+MemoizedRoomInfoTable.displayName = 'RoomInfoTable'
+
+export default MemoizedRoomInfoTable

@@ -9,7 +9,7 @@ const headers = {
     // 'Access-Control-Allow-Headers': '*'
 };
 
-console.log("AXIOS", process.env.NEXT_PUBLIC_API_BASE_URL);
+// console.log("AXIOS", process.env.NEXT_PUBLIC_API_BASE_URL);
 
 // Create axios instance
 const instance = axios.create({
