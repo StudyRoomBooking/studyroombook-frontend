@@ -48,7 +48,7 @@ const bookingHistoryColumns = [
 ]
 
 interface RoomInfoTableProps {
-  roomNumber: string // Adjust the type as per your requirement
+  roomNumber: Number // Adjust the type as per your requirement
 }
 
 const RoomInfoTable: React.FC<RoomInfoTableProps> = ({ roomNumber }) => {
