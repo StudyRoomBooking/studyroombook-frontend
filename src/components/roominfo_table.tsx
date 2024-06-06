@@ -46,11 +46,17 @@ const bookingHistoryColumns = [
     key: 'student_id',
   },
 ]
-const RoomInfoTable = React.memo(({ roomNumber }) => {
+
+interface RoomInfoTableProps {
+  roomNumber: string // Adjust the type as per your requirement
+}
+
+const RoomInfoTable: React.FC<RoomInfoTableProps> = ({ roomNumber }) => {
   // export default function RoomInfoTable(props: any) {
   const [messageApi, contextHolder] = message.useMessage()
   const [bookingHistory, setBookingHistory] = React.useState([])
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
     const getRoomInfo = async () => {
       try {
@@ -97,6 +103,10 @@ const RoomInfoTable = React.memo(({ roomNumber }) => {
       <Table dataSource={bookingHistory} columns={bookingHistoryColumns}></Table>
     </main>
   )
-})
+}
 
-export default RoomInfoTable
+// export default RoomInfoTable
+const MemoizedRoomInfoTable = React.memo(RoomInfoTable)
+MemoizedRoomInfoTable.displayName = 'RoomInfoTable'
+
+export default MemoizedRoomInfoTable
