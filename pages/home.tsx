@@ -9,6 +9,7 @@ import {
   AreaChartOutlined,
   QrcodeOutlined,
   EyeOutlined,
+  ScanOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Breadcrumb, Layout, Menu, theme, Button, Avatar, Space, Image, message, Dropdown } from 'antd'
@@ -22,6 +23,7 @@ import ReservationHistory from '../src/components/reservationhistory'
 import PersonalInfo from '../src/components/personalinfo'
 import OtherContent from '../src/components/other'
 import Kiosk from '../src/components/kiosk'
+import Checkin from '../src/components/checkin'
 import Analytics from '../src/components/analytics'
 import Management from '../src/components/management'
 import Clock from '@/components/clock'
@@ -39,9 +41,10 @@ const items: MenuItem[] = [
   getItem('预约历史', 'history', <UserOutlined />),
   getItem('个人信息', 'about', <TeamOutlined />),
   getItem('自助登记专柜', 'kiosk', <QrcodeOutlined />),
+  getItem('签到', 'checkin', <ScanOutlined />),
   getItem('数据分析', 'analytics', <AreaChartOutlined />),
   getItem('管理', 'management', <EyeOutlined />),
-  getItem('其他', 'file', <FileOutlined />),
+  // getItem('其他', 'file', <FileOutlined />),
 ]
 
 const breadcrumbItems = [
@@ -124,6 +127,8 @@ export default function Home() {
         return <PersonalInfo />
       case 'kiosk':
         return <Kiosk />
+      case 'checkin':
+        return <Checkin />
       case 'analytics':
         return <Analytics />
       case 'management':

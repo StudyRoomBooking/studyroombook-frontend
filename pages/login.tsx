@@ -1,6 +1,8 @@
 import React from 'react'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button, Image, message } from 'antd'
 import axios from '../src/services/axios'
+
+import logo from '../public/studyroombook_no_bg.png'
 
 export default function Login() {
   const [messageApi, contextHolder] = message.useMessage()
@@ -106,7 +108,11 @@ export default function Login() {
           </Form>
         </div>
 
-        <div style={{ width: '50%', backgroundColor: '#D6FFF2' }}>{/* Image Placeholder */}</div>
+        <div className="w-1/2 bg-[#D6FFF2] flex items-center justify-center">
+          <div className="flex items-center justify-center">
+            <Image className="" src={logo.src} alt="logo" preview={false} />
+          </div>
+        </div>
       </div>
     </main>
   )

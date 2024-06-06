@@ -26,8 +26,8 @@ const bookingHistoryColumns = [
             color = 'yellow'
           } else if (tag === 'canceled') {
             color = 'red'
-          } else if (tag === 'purple') {
-            color = 'volcano'
+          } else if (tag === 'noshow') {
+            color = 'purple'
           } else if (tag === 'completed') {
             color = 'green'
           }
@@ -46,8 +46,8 @@ const bookingHistoryColumns = [
     key: 'student_id',
   },
 ]
-
-export default function RoomInfoTable(props: any) {
+const RoomInfoTable = React.memo(({ roomNumber }) => {
+  // export default function RoomInfoTable(props: any) {
   const [messageApi, contextHolder] = message.useMessage()
   const [bookingHistory, setBookingHistory] = React.useState([])
 
@@ -55,13 +55,13 @@ export default function RoomInfoTable(props: any) {
     const getRoomInfo = async () => {
       try {
         const data = {
-          room_number: props.roomNumber,
+          room_number: roomNumber,
           date: new Date().toISOString(),
         }
         const response = await axios.post('/reservation/get_room_reservations', data)
         console.log('Room information:', response)
         const bookingHistoryMap = response.data.map((booking: any, index: any) => ({
-          room_id: props.roomNumber,
+          room_id: roomNumber,
           seat_id: booking.seat_number,
           time_of_booking: tzconversion(booking.request_time),
           date_booked: booking.reservation_date,
@@ -89,7 +89,7 @@ export default function RoomInfoTable(props: any) {
       getRoomInfo()
     }, 60000)
     return () => clearInterval(interval)
-  }, [props.roomNumber, messageApi, contextHolder, setBookingHistory, messageApi.error])
+  }, [])
 
   return (
     <main>
@@ -97,4 +97,6 @@ export default function RoomInfoTable(props: any) {
       <Table dataSource={bookingHistory} columns={bookingHistoryColumns}></Table>
     </main>
   )
-}
+})
+
+export default RoomInfoTable
